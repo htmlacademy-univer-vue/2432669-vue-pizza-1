@@ -115,6 +115,9 @@ import ingredients from '../mocks/ingredients.json'
 </template>
 
 <style lang="scss" scoped>
+@import '../assets/scss/ds-system/ds-typography.scss';
+@import '../assets/scss/ds-system/ds-shadows.scss';
+
 .content {
   padding-top: 20px;
 }
