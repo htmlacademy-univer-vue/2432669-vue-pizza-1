@@ -8,10 +8,9 @@ import { AppLayout } from '@/layouts'
   
    
     
-    <app-layout>
-      
+    <app-layout>      
     <router-view />
-  </app-layout>>
+  </app-layout>
     
   
 </template>
