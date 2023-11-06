@@ -9,10 +9,15 @@
       <a href="cart.html">0 ₽</a>
     </div>
     <div class="header__user">
-      <a href="#" class="header__login"><span>Войти</span></a>
+      <a  class="header__login" @click="router.push({path:'/sign'})"><span>Войти</span></a>
     </div>
   </header>
 </template>
+<script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+</script>
 <style lang="scss" scoped >
 @import '../assets/scss/ds-system/ds-colors.scss';
 @import '../assets/scss/ds-system/ds-shadows.scss';
