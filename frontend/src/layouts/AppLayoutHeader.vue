@@ -8,7 +8,8 @@
     <div class="header__cart">
       <a  @click="router.push({path:'/cart'})">0 ₽</a>
     </div>
-    <div class="header__user">
+    
+    <div class="header__user" v-if="props.logined">
       <a @click="router.push({path:'/user'})">
         <picture>
           <source type="image/webp" srcset="../assets/img/users/user5.webp 1x, ../assets/img/users/user5@2x.webp 2x">
@@ -17,13 +18,19 @@
         <span>Василий Ложкин</span>
       </a>
       <a href="#" class="header__logout"><span>Выйти</span></a>
-      <a  class="header__login" @click="router.push({path:'/login'})"><span>Войти</span></a>
     </div>
+    <div class="header__user" v-else>
+      <a  class="header__login" @click="router.push({path:'/login'})"><span>Войти</span></a>
+    
+    </div>
+
     
   </header>
 </template>
 <script setup>
 import { useRouter } from 'vue-router';
-
+const props = defineProps({
+  logined:{type:Boolean}
+})
 const router = useRouter()
 </script>

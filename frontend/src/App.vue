@@ -1,19 +1,29 @@
 <script setup>
 import { AppLayout } from '@/layouts'
-// import AppHeader from './layouts/AppHeader.vue';
-// import HomeView from './views/HomeView.vue';
+import { reactive } from "vue";
+
+const state = reactive({
+  logined:false,
+})
+
+function updateLogin  ($event
+  
+){
+  console.log($event);
+}
 </script>
 
 <template>
   
    
     
-    <app-layout>      
-    <router-view />
+    <app-layout :logined = state.logined >      
+    <router-view v-model:logined = state.logined />
   </app-layout>
     
   
 </template>
+
 
 <style lang="scss">
 @import "@/assets/scss/app.scss";
