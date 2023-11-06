@@ -6,41 +6,28 @@ import CounterButton from '../components/CounterButton.vue';
 import Counter from '../components/Counter.vue';
 import AppDrag from '@/common/components/AppDrag.vue'
 import AppDrop from '@/common/components/AppDrop.vue'
-const props = defineProps({
-  ingredients: {
-    type: Object,
 
-  }
-})
-const emit = defineEmits(['update:ingredients'])
+// const props = defineProps({
+//   datas:{type:Array}
+// })
+// const data = reactive({
+//   drop:new Array()
+// })
 
-const data = reactive({
-  droped:false,
-  count:0,
-  price:0,
-  id:0
-})
+defineEmits(['drop'])
 
+// const changeIn = inject('changeIn')
+
+// function dropTas ($event,task){
+//   let obj = JSON.parse($event)
+//   console.log($event);
+//   data.drop[obj.id] = {price:obj.price,name: obj.name}
   
+//   console.log($event);
+// }
 
-const changeIn = inject('changeIn')
-function droptask(e){
 
-  data.droped=true;
-  data.count +=1
-  data.price = e.target.firstElementChild.getAttributeNode('alt')
-  data.id = e.target.firstElementChild.key
-  let amount = parseInt(data.price) * parseInt(data.count)
-  console.log(data.price);
-
-  changeIn(amount,parseInt(data.count),parseInt(data.id),"")
-}
-
-onUpdated(() => {
-
-  emit('update:ingredients', { amount: data.amount, count: data.count, id: data.id })
-})
-
+// "$emit('drop', $event)"
 
 </script>
 <style lang="scss" scoped>
@@ -142,14 +129,15 @@ onUpdated(() => {
     <p>Начинка:</p>
 
     <ul class="ingredients__list">
-      <AppDrop v-for="ingredient in ingredients" v-model:drop="data" @mousedown="droptask">
-        <AppDrag>
+      <AppDrop v-for="ingredient in ingredients"   @drop="$emit('drop', $event)">
+      
+        <AppDrag :transfer-data="ingredient" >
           <li class="ingredients__item" >
             <span :class="'filling filling--' + ing[parseInt(ingredient.id)]"
               :alt="ingredient.price" :key="parseInt(ingredient.id)">{{ ingredient.name }}</span>
-            <div class="counter counter--orange ingredients__counter">
+            <div class="counter counter--orange ingredients__counter">            
               <Counter v-model:ID="ingredient.id" v-model:price="ingredient.price"
-                v-model:name="ing[parseInt(ingredient.id)]" v-model:data="data" v-model:drop="data"/>
+                v-model:name="ing[parseInt(ingredient.id)]" v-model:data="data"  />
             </div>
           </li>
         </AppDrag>

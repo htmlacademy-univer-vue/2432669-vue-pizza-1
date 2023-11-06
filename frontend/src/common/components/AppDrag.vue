@@ -15,6 +15,7 @@ function onDrag({ dataTransfer }) {
     DATA_TRANSFER_PAYLOAD,
     JSON.stringify(props.transferData)
   );
+  console.log(props.transferData)
 }
 </script>
 

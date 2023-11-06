@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { reactive, ref,inject } from "vue";
+import { reactive, ref,inject, onUpdated, onMounted, watchEffect } from "vue";
 
 import CounterButton from './CounterButton.vue';
 import CounterValue from './CounterValue.vue';
@@ -16,14 +16,16 @@ const props = defineProps({
     data:{type:Object},
     price:{type:String},
     name:{type:String},
-    data:Object
+    
     
 })
 const emit = defineEmits(['update:data'])
 const status = reactive({
     disabled : true
 })
-let count = ref(0);
+const ingredient = inject('ingredients')
+
+let count  =  ref(0);
 const changeIn = inject('changeIn')
 let key =0
 const decrement = () => {
@@ -50,5 +52,14 @@ const increment = () => {
     changeIn(amount,count.value ,parseInt(props.ID),props.name)
 
 };
+onMounted(()=>{
+    watchEffect(()=>{
+        if(ingredient[parseInt(props.ID)-1]!==undefined && count.value <= ingredient[parseInt(props.ID)-1].count){
+        count.value = ingredient[parseInt(props.ID)-1].count
+        console.log(count.value);
+    }
+    })
+})
+
 
 </script>
