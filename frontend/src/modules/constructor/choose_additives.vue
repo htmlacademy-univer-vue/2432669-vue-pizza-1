@@ -2,8 +2,8 @@
 import { onUpdated, reactive, ref ,inject} from "vue";
 import ingredients from '../../mocks/ingredients.json'
 import ing from '../../common/data/ingredients.js'
-import CounterButton from '../components/CounterButton.vue';
-import Counter from '../components/Counter.vue';
+
+import Counter from '../components/AppCounter.vue';
 import AppDrag from '@/common/components/AppDrag.vue'
 import AppDrop from '@/common/components/AppDrop.vue'
 
