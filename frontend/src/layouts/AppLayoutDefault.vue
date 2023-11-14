@@ -1,4 +1,4 @@
 <template>
     
     <slot/>
-    </template>
+</template>

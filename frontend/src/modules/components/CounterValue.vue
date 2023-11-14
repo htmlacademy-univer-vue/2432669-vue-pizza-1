@@ -1,6 +1,6 @@
 <template>
   <!-- <span>Current value: {{ value }}</span> -->
-  <input type="text" name="counter" class="counter__input" :value= "value"  placeholder="0" @blur="onchange">
+  <input type="text" name="counter" class="counter__input" :value= "props.value"  placeholder="0" @blur="onchange">
 </template>
 
 <script setup>
@@ -11,6 +11,7 @@ const props  = defineProps({
   count:{type:Number},
   ID:{type:String},
   price:{type:String},
+  value:{type:Number}
 });
 
 

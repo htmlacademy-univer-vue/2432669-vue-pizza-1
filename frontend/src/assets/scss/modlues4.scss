@@ -106,7 +106,7 @@
   
       color: $white;
       background-color: $green-500;
-      background-image: url("../img/cart.svg");
+      background-image: url("../../../src/assets/img/cart.svg");
       background-repeat: no-repeat;
       background-position: 20px center;
       background-size: 29px 27px;
@@ -188,7 +188,7 @@
       content: '';
       vertical-align: middle;
   
-      background: url(../img/login.svg) no-repeat center;
+      background: url("../../../src/assets/img/login.svg") no-repeat center;
       background-size: auto 50%;
     }
   }
@@ -205,7 +205,7 @@
       content: '';
       vertical-align: middle;
   
-      background: url(../img/login.svg) no-repeat center;
+      background: url("../../../src/assets/img/login.svg") no-repeat center;
       background-size: auto 50%;
     }
   }
@@ -298,7 +298,7 @@
     &--arrow {
       &::before {
         content: "";
-        background-image: url("../img/button-arrow.svg");
+        background-image: url("../../../src/assets/img/button-arrow.svg");
         background-position: center;
         background-repeat: no-repeat;
         margin-right: 16px;
@@ -424,6 +424,13 @@
     &--small {
       @include b-s18-h21;
     }
+  }
+  
+
+  .sidebar {
+    flex-grow: 1;
+  
+    background-color: rgba($green-500, 0.05);
   }
   
   

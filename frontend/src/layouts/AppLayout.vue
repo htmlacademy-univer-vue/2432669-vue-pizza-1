@@ -1,4 +1,4 @@
-<template>
+<template >
     <component :is="layout">
       <slot />
     </component>
