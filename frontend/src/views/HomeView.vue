@@ -28,7 +28,7 @@ provide('ingredients',data.ingredients)
 
 provide('changeIn',(amount,count,id,key)=>{
   
-  if( data.ingredients[id-1] != undefined){
+  if( data.ingredients[id-1] != undefined ){
     data.ingredients[id-1].count=count
     data.ingredients[id-1].amount=amount
   }else{

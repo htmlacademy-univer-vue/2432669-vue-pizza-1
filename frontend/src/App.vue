@@ -17,9 +17,9 @@ function updateLogin  ($event
   
    
     
-    <app-layout :logined = state.logined >      
+  <AppLayout :logined = state.logined >      
     <router-view v-model:logined = state.logined />
-  </app-layout>
+  </AppLayout>
     
   
 </template>
