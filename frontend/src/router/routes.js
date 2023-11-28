@@ -1,3 +1,6 @@
+import Orders from "../views/OrdersView.vue";
+import Profile from "../views/ProfileView.vue";
+
 export default [
     {
         path: '/',
@@ -12,26 +15,35 @@ export default [
         meta: { layout: "AppLayoutDefault" }
     },
     {
-        path:'/cart',
-        name:'CartView',
-        component:()=>import("../views/CartView.vue"),
-        meta:{ layout: 'AppLayoutMain' }
+        path: '/cart',
+        name: 'CartView',
+        component: () => import("../views/CartView.vue"),
+        meta: { layout: 'AppLayoutMain' }
     },
     {
-        path:'/user',
-        name:'UserView',
-        component:()=>import("../views/UserView.vue"),
-        meta:{ layout: 'AppLayoutMain' }
-    },
-    {
-        path:'/orders',
-        name:'OrdersView',
-        component:()=>import("../views/OrdersView.vue"),
-        meta:{ layout: 'AppLayoutMain' }
-    },{
-        path:'/welcom',
-        name:'ProfileView',
-        component:()=>import("../views/ProfileView.vue"),
-        meta:{ layout: 'AppLayoutDefault' }
+        path: '/user',
+        name: 'UserView',
+        component: () => import("../views/UserView.vue"),
+        redirect: "/user/profile",
+        meta: { layout: 'AppLayoutMain' },
+
+        children: [
+            {
+                path: 'orders',
+                // name: 'OrdersView',
+                component: Orders,
+                meta: { layout: 'AppLayoutMain' }
+
+            },
+            {
+                path: 'profile',
+                // name: 'ProfileView',
+                component: Profile,
+                meta: { layout: 'AppLayoutMain' }
+
+                // meta: { layout: 'AppLayoutDefault' }
+            }
+
+        ]
     }
 ]

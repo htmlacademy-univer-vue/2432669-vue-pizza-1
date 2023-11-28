@@ -1,15 +1,20 @@
 <script setup>
 import { onMounted, onUpdated, reactive, inject, computed } from 'vue';
-
+import sauce from '../../common/data/sauces'
+import ings from '../../common/data/ingredients'
+import {useCartStore} from '@/stores'
+const cartStore = useCartStore()
+const pizzas = cartStore.pizzas
 
 const props = defineProps({
     dough: {
-        type: String
+        type: Number
     },
     sauce: {
-        type: String
+        type: Number
     }
 })
+let ingredient =[]
 
 const state = reactive({
     name1: "",
@@ -18,14 +23,14 @@ const state = reactive({
 })
 
 function update() {
-    if (props.dough === 'large') {
+    if (parseInt(props.dough) === 2) {
         state.name1 = "big"
         state.count++
     } else {
         state.name1 = "small"
         state.count--
     }
-    state.name2 = props.sauce
+    state.name2 = sauce[props.sauce]
 }
 const ingredients = inject('ingredients');
 
@@ -48,6 +53,9 @@ let show = computed(() => {
     }
 
 })
+
+// store.$subscribe((mutation, state) => {  pizzas = state.pizzas
+//   },{ detached: false })
 
 onMounted(() => {
     update()
@@ -242,15 +250,14 @@ onUpdated(() => {
 </style>
 <template>
     <div class="content__constructor">
-        <div :class="'pizza pizza--foundation--' + state.name1 + '-' + state.name2" :key="state.count">
+        <div :class="'pizza pizza--foundation--' + state.name1 + '-' + state.name2" :key="state.count" >
 
-            <div class="pizza__wrapper" >
+            <div class="pizza__wrapper" > 
                
-                  
-
-
+                    
+            <div v-if="pizzas.length>0"  v-for="(item,index) in pizzas[(pizzas.length)-1].ingredients" class="pizza__filling" :class="'pizza__filling--' + ings[item.ingredientId]" :key="index"></div>
            
-            <div class="pizza__filling pizza__filling--mushrooms" v-if="ingredients.length>0 && (ingredients[0]!=undefined && ingredients[0].count>0)" v-for="i in ingredients[0].count"></div>
+            <!-- <div class="pizza__filling pizza__filling--mushrooms" v-if="ingredients.length>0 && (ingredients[0]!=undefined && ingredients[0].count>0)" v-for="i in ingredients[0].count"></div>
             <div class="pizza__filling pizza__filling--cheddar" v-if="ingredients.length>0 && (ingredients[1]!=undefined &&  ingredients[1].count>0)" v-for="i in ingredients[1].count"></div>
             <div class="pizza__filling pizza__filling--salami" v-if="ingredients.length>0 && (ingredients[2]!=undefined &&  ingredients[2].count>0)" v-for="i in ingredients[2].count"></div>
             <div class="pizza__filling pizza__filling--ham" v-if="ingredients.length>0 && (ingredients[3]!=undefined&&  ingredients[3].count>0)" v-for="i in ingredients[3].count"></div>
@@ -264,7 +271,7 @@ onUpdated(() => {
             <div class="pizza__filling pizza__filling--salmon" v-if="ingredients.length>0 && (ingredients[11]!=undefined&&  ingredients[11].count>0)" v-for="i in ingredients[11].count"></div>
             <div class="pizza__filling pizza__filling--mozzarella" v-if="ingredients.length>0 && (ingredients[12]!=undefined &&  ingredients[12].count>0)" v-for="i in ingredients[12].count"></div>
             <div class="pizza__filling pizza__filling--parmesan" v-if="ingredients.length>0 && (ingredients[13]!=undefined &&  ingredients[13].count>0)" v-for="i in ingredients[13].count"></div>
-            <div class="pizza__filling pizza__filling--blue_cheese" v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)" v-for="i in ingredients[14].count"></div>
+            <div class="pizza__filling pizza__filling--blue_cheese" v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)" v-for="i in ingredients[14].count"></div> -->
         </div>
                 
 

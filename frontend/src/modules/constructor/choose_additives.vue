@@ -1,34 +1,59 @@
 <script setup>
-import { onUpdated, reactive, ref ,inject} from "vue";
+import { onUpdated, reactive, ref, inject, watch,effect } from "vue";
 import ingredients from '../../mocks/ingredients.json'
 import ing from '../../common/data/ingredients.js'
 
 import Counter from '../components/AppCounter.vue';
 import AppDrag from '@/common/components/AppDrag.vue'
 import AppDrop from '@/common/components/AppDrop.vue'
+import { useCartStore } from '@/stores'
+const cartStore = useCartStore()
+const data = reactive({
+  
+  ingredient: {}
 
-// const props = defineProps({
-//   datas:{type:Array}
-// })
-// const data = reactive({
-//   drop:new Array()
-// })
+})
 
+const props = defineProps({
+    dragId:{
+        type:Number,
+        
+    }
+})
 defineEmits(['drop'])
 
-// const changeIn = inject('changeIn')
 
-// function dropTas ($event,task){
-//   let obj = JSON.parse($event)
-//   console.log($event);
-//   data.drop[obj.id] = {price:obj.price,name: obj.name}
+effect(() => {
+  if (parseInt(data.ingredient.quantity) > 0) {
+    
+    cartStore.updateIngredient(data.ingredient)
+  } else {
+
+    cartStore.deleteIngredient(data.ingredient)
+  }
+
+})
+
+function moveTask($event,task){
   
-//   console.log($event);
-// }
+  let obj = JSON.parse($event)
+  console.log(obj);
+  let id = obj.id
+  data.DragId = id
+  let quantit = cartStore.findIngredient(id)
+  data.ingredient = id
+  data.quantity = quantit+1
+  if(quantit === 0){
+    data.ingredient = id
+    data.quantity = 1
+    
+  }else{
+    data.ingredient = id
+    data.quantity = quantit+1
+   
+  }
 
-
-// "$emit('drop', $event)"
-
+}
 </script>
 <style lang="scss" scoped>
 @import '../../assets/scss/ds-system/ds-colors.scss';
@@ -129,15 +154,15 @@ defineEmits(['drop'])
     <p>Начинка:</p>
 
     <ul class="ingredients__list">
-      <AppDrop v-for="ingredient in ingredients"   @drop="$emit('drop', $event)">
-      
-        <AppDrag :transfer-data="ingredient" >
-          <li class="ingredients__item" >
-            <span :class="'filling filling--' + ing[parseInt(ingredient.id)]"
-              :alt="ingredient.price" :key="parseInt(ingredient.id)">{{ ingredient.name }}</span>
-            <div class="counter counter--orange ingredients__counter">            
-              <Counter v-model:ID="ingredient.id" v-model:price="ingredient.price"
-                v-model:name="ing[parseInt(ingredient.id)]" v-model:data="data"  />
+      <AppDrop v-for="ingredient in ingredients" @drop="moveTask($event,task)">
+
+        <AppDrag :transfer-data="ingredient">
+          <li class="ingredients__item">
+            <span :class="'filling filling--' + ing[parseInt(ingredient.id)]" :alt="ingredient.price"
+              :key="parseInt(ingredient.id)">{{ ingredient.name }}</span>
+            <div class="counter counter--orange ingredients__counter">
+              <Counter v-model:ingredientId="ingredient.id" v-model:price="ingredient.price"
+                v-model:ingredients="data.ingredient" :dragId ="props.dragId" />
             </div>
           </li>
         </AppDrag>

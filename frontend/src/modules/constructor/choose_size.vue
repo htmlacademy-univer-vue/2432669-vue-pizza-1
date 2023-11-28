@@ -1,6 +1,17 @@
 <script setup>
 import sizes from '../../mocks/sizes.json'
 import s from "../../common/data/sizes"
+import {  reactive, onUpdated } from 'vue';
+
+import {useCartStore} from '@/stores'
+const cartStore = useCartStore()
+
+const state = reactive({
+    id:1,
+    // sauce:"tomato",
+    multiplier:50
+    
+})
 const props = defineProps({
     size:{
         type:Object,
@@ -10,10 +21,15 @@ const props = defineProps({
 const emit = defineEmits(['update:size'])
 function onchange(e){
   if(e.target.checked){
-    emit('update:size',{size:e.target.value,multiplier:e.target.alt})
+    emit('update:size',{id:e.target.title,multiplier:e.target.alt})
+    state.id=e.target.title
+        // state.sauce = e.target.value
+    state.multiplier = parseInt(e.target.alt) 
   }
 }
-
+onUpdated(()=>{
+  cartStore.updateId("size",state.id)
+})
 </script>
 <style lang="scss" scoped>
 @import '../../assets/scss/ds-system/ds-colors.scss';
@@ -97,7 +113,7 @@ function onchange(e){
 
             <div class="sheet__content diameter">
                 <label class="diameter__input diameter__input--small" v-for="size in sizes">
-                    <input type="radio" name="diameter" :value="s[parseInt(size.id)]" class="visually-hidden" :alt="size.multiplier"  @change="onchange">
+                    <input type="radio" name="diameter" :title="size.id" class="visually-hidden" :alt="size.multiplier"  @change="onchange">
                     <span>{{ size.name }}</span>
                 </label>
 

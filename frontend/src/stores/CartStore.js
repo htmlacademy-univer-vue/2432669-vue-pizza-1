@@ -11,25 +11,10 @@ export const useCartStore = defineStore('cart',{
             comment:'',
         },
         pizzas: [
-            {
-              name: '',
-              sauceId: 0,
-              doughId: 0,
-              sizeId: 0,
-              quantity: 0,
-              ingredients: [
-                {
-                  ingredientId: 0,
-                  quantity: 0
-                }
-              ]
-            }
+            
           ],       
         misc:[
-            {
-                miscId: 0,
-                quantity: 0
-            }
+            
         ]
     }),
     getters:{
@@ -61,9 +46,111 @@ export const useCartStore = defineStore('cart',{
                 amount += amountmice * m.quantity
             })
             return amount
+        },
+        getPizzasIngredient(state){
+            if(state.pizzas.length!==0){
+                return state.pizzas.ingredients
+            }
         }
     },
     actions:{
+        AddPizza(pizza){
+            this.pizzas.push(pizza)
+        },
+        Addingredients(ingredient){
+            let length = this.pizzas.length
+
+            this.pizzas[length-1].ingredients.push(ingredient)
+        },
+        updateIngredient(ingredient){
+            let length = this.pizzas.length
+            const index =  this.pizzas[length-1].ingredients.findIndex(({ ingredientId }) => ingredient.ingredientId === ingredientId)
+            
+            if(index!==-1){
+                
+                this.pizzas[length-1].ingredients.splice(index, 1, ingredient)            
+             }else {
+                this.Addingredients(ingredient)
+            }
+
+            
+        },
+        updateId(str,id){
+            let length = this.pizzas.length
+            let varStr = str+'Id'
+            this.pizzas[length-1].varStr = id
+        },
+        deleteIngredient(ingredient){
+            
+
+            let length = this.pizzas.length
+            if(length>0){
+                const index =  this.pizzas[length-1].ingredients.findIndex(({ ingredientId }) => ingredient.ingredientId === ingredientId)
+            
+                if(index!==-1){
+                    
+                    this.pizzas[length-1].ingredients = this.pizzas[length-1].ingredients.filter(task => task.ingredientId !== ingredient.ingredientId)
+                    
+                } 
+            }
+            
+        },
+        findIngredient(ingredientId){
+            let length = this.pizzas.length
+            if(length>0){
+                let index  = this.pizzas[length-1].ingredients.findIndex((e) => e.ingredientId === ingredientId)
+                if (index ===-1){
+                    return 0
+                }else{
+                    return this.pizzas[length-1].ingredients[index].quantity
+                }
+                // return  ingredient ===undefined?0:ingredient.quantity 
+                         
+            }
+        },
+        AddPizzaName(str){
+            let length = this.pizzas.length
+            
+            this.pizzas[length-1].name = str
+        },
+        updatePizzacount(num,index){
+            this.pizzas[index].quantity = num
+
+        },
+        addmisc(id,count){
+            this.misc.push({miscId:id,quantity:count})
+        },updatemisc(id,count){
+
+
+            const index =  this.misc.find((e) => e.miscId === id)
+            
+
+            if(index!==undefined){
+                if(parseInt(count) === 0){
+                    this.misc = this.misc.filter(e => e.miscId != id)
+                }else{
+                    this.misc.splice(index,1,{miscId:id,quantity:count})
+
+                }
+                       
+             }else {
+                this.addmisc(id,count)
+            }
+
+           
+        },delteMisc(id){
+            let length = this.pizzas.length
+            if(length>0){
+                const index =  this.misc.find((e) => e.miscId === id)
+                
+                if(index!==undefined){
+                    console.log(index);
+                    this.misc = this.misc.filter(e => e.miscId != index.miscId)
+
+                    
+                } 
+            }
+        }
 
     }
 })

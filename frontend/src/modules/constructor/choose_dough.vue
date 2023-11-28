@@ -2,26 +2,26 @@
 
 import doughs from '../../mocks/dough.json'
 import doug from "../../common/data/doughSizes"
-import { onMounted, reactive } from 'vue';
+import { onMounted, onUpdated, reactive } from 'vue';
 
-
+import {useCartStore} from '@/stores'
+const cartStore = useCartStore()
 
 const state = reactive({
-    doughs:"large",
+    id:2,   
     price:300
     
 })
-const props = defineProps({
-  dough:{type:Object}
-})
+
 
 const emit = defineEmits(['update:doughType'])
 
 
 function change(event){
- console.log(1111);
+ 
    if(event.target.checked){
-      state.doughs = event.target.value
+    state.id = event.target.title
+      // state.doughs = event.target.value
       state.price = parseInt(event.target.alt
       ) 
    }
@@ -29,10 +29,12 @@ function change(event){
    
 
 }
-
+onUpdated(()=>{
+  cartStore.updateId("dough",state.id)
+})
 
 onMounted(()=>{
-  state.doughs='large'
+  state.id=2
 })
 </script>
 <style lang="scss" scoped>
@@ -112,7 +114,7 @@ onMounted(()=>{
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
             <div class="sheet__content dough">
                 <label class="dough__input dough__input--light" v-for="dough in doughs">
-                    <input type="radio" name="dough" :value="doug[parseInt(dough.id)]" :alt="dough.price"  class="visually-hidden" :checked = "dough.id ==2?true:false" @click="change" >
+                    <input type="radio" name="dough" :alt="dough.price" :title="dough.id"  class="visually-hidden" :checked = "dough.id ==2?true:false" @click="change" >
                     <b>{{ dough.name }}</b>
                     <span>{{ dough.description }}</span>
                 </label>
