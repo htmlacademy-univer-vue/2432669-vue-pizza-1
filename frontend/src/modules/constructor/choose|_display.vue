@@ -29,26 +29,15 @@ function update() {
 }
 const ingredients = inject('ingredients');
 
-let show = computed(() => {
-    return function (ing) {
-        let str = ''
-        ing.map(item => {
-            if (item.count > 1) {
+let list = computed(()=>{
 
-                for (let i = 0; i < ing.count - 1; i++) {
-                    str += `<div class="pizza__filling pizza__filling--${item.name}" ></div>`
-                }
-            }
-            else {
-                str = `<div class="pizza__filling pizza__filling--${item.name}" ></div>`
-            }
-        })
-
-        return str
-    }
-
+    
+  return ingredients.filter(item=>{
+    return item.count >0
 })
 
+
+})
 onMounted(() => {
     update()
 })
@@ -245,9 +234,8 @@ onUpdated(() => {
         <div :class="'pizza pizza--foundation--' + state.name1 + '-' + state.name2" :key="state.count">
 
             <div class="pizza__wrapper">
-                <div class="pizza__filling pizza__filling--mushrooms"
-                    v-if="ingredients.length > 0 && (ingredients[0] != undefined && ingredients[0].count > 0)"></div>
-                <div class="pizza__filling pizza__filling--cheddar"
+                <div  v-for="item in list" class="pizza__filling" :class ="[`pizza__filling--${item.name}` , item.count === 2 ? 'pizza__filling--second':'',item.count === 3? 'pizza__filling--third':'']" ></div>
+                <!-- <div class="pizza__filling pizza__filling--cheddar"
                     v-if="ingredients.length > 0 && (ingredients[1] != undefined && ingredients[1].count > 0)"></div>
                 <div class="pizza__filling pizza__filling--salami"
                     v-if="ingredients.length > 0 && (ingredients[2] != undefined && ingredients[2].count > 0)"></div>
@@ -274,7 +262,7 @@ onUpdated(() => {
             <div class="pizza__filling pizza__filling--parmesan"
                 v-if="ingredients.length>0 && (ingredients[13]!=undefined &&  ingredients[13].count>0)"></div>
             <div class="pizza__filling pizza__filling--blue_cheese"
-                v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)"></div>
+                v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)"></div> -->
         </div>
 
 
