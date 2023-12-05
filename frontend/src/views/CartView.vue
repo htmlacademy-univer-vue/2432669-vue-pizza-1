@@ -1,5 +1,5 @@
 <template>
-  <form action="test.html" method="post" class="layout-form">
+  <form  @submit.prevent="submit"  autocomplete="off" class="layout-form">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -76,7 +76,7 @@
 
             <label class="input input--big-label">
               <span>Контактный телефон:</span>
-              <input type="text" name="tel" placeholder="+7 999-999-99-99">
+              <input type="text" name="tel" placeholder="+7 999-999-99-99" @change="changeInfo($event)">
             </label>
 
             <div class="cart-form__address" v-if="data.takeType === '2'">
@@ -85,21 +85,21 @@
               <div class="cart-form__input">
                 <label class="input">
                   <span>Улица*</span>
-                  <input type="text" name="street">
+                  <input type="text" name="street" @change="changeInfo($event,name)">
                 </label>
               </div>
 
               <div class="cart-form__input cart-form__input--small" >
                 <label class="input">
                   <span>Дом*</span>
-                  <input type="text" name="house">
+                  <input type="text" name="house" @change="changeInfo($event)">
                 </label>
               </div>
 
               <div class="cart-form__input cart-form__input--small">
                 <label class="input">
                   <span>Квартира</span>
-                  <input type="text" name="apartment">
+                  <input type="text" name="apartment" @change="changeInfo($event)">
                 </label>
               </div>
             </div>
@@ -117,17 +117,19 @@
       </div>
 
       <div class="footer__submit">
-        <button type="submit" class="button">Оформить заказ</button>
+        <button type="button" class="button" @click="showpopup" :disabled="data.totle_amount===0?true:false">Оформить заказ</button>
       </div>
     </section>
   </form>
-</template>
+  <Popup v-if="data.showpopup" :logined="props.logined"></Popup>
+  </template>
 <script setup>
 
 import { useRouter } from 'vue-router';
 import { useCartStore, useDataStore } from '@/stores'
 import { computed, onMounted, reactive } from 'vue';
 import Conter from '../modules/components/AppCounter.vue'
+import Popup from '../modules/components/popUp.vue' 
 
 
 const router = useRouter()
@@ -141,26 +143,33 @@ const data = reactive({
   pizzalist:'',
   mice:'',
   totle_amount:0,
-  takeType:'1'
+  takeType:'1',
+  showpopup:false,
+  phone:'',
+  address:{
+    street: "",
+    building: "",
+    flat: "",
+    comment: ""
+  }
 })
 
 const props=defineProps({
-  Amount:{type:Number}
+  Amount:{type:Number},
+  logined:{type:Boolean}
 })
 const emit = defineEmits(['update:Amount'])
 data.pizzalist = computed(()=>{
   let list =[]
 
 cartStore.pizzas.map(e=>{
-  console.log(e.name);
-  console.log(e.name!='');
-  console.log(e.ingredients.length!==0);
+  
 
   if(e.name!=''&& e.ingredients.length!==0){
     list.push(e)
   }
 })
-console.log(list);
+
 cartStore.pizzas = list
 return list 
 })
@@ -213,6 +222,36 @@ function test(arr) {
 function onchang(e){
   data.takeType = e.target.value
 }
+
+function showpopup(){
+  if(data.totle_amount>0){
+    data.showpopup = true
+}
+  }
+  
+function submit(){
+
+return false
+}
+function changeInfo(event){
+  switch(event.target.name){
+    case "tel":
+      data.phone = event.target.value
+      break;
+    case "street":
+      data.address.street =  event.target.value
+      beeak;
+    case 'house':
+    data.address.building=  event.target.value
+      break;
+    case 'apartment':
+    data.address.flat=  event.target.value
+      break;
+    
+  }
+  data.phone = event.target.value
+}
+
 
 
 
