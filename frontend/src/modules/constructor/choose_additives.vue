@@ -1,58 +1,77 @@
 <script setup>
 import { onUpdated, reactive, ref, inject, watch,effect } from "vue";
-import ingredients from '../../mocks/ingredients.json'
-import ing from '../../common/data/ingredients.js'
+
+
 
 import Counter from '../components/AppCounter.vue';
 import AppDrag from '@/common/components/AppDrag.vue'
 import AppDrop from '@/common/components/AppDrop.vue'
-import { useCartStore } from '@/stores'
+import { useCartStore, useDataStore } from '@/stores'
+
+const dataStore = useDataStore()
 const cartStore = useCartStore()
 const data = reactive({
   
-  ingredient: {}
+  ingredient: {
+    ingredientId:0,
+    quantity:0
+  }
 
 })
 
 const props = defineProps({
-    dragId:{
-        type:Number,
-        
-    }
+  draged:{
+        type:Object,        
+    },
+    added:{
+      type:Boolean
+    }, pizzaid:{
+        type:String
+    },
+    ings:{
+      type:Array
+    },
+    index:{type:Number}
 })
-defineEmits(['drop'])
+
+const emit = defineEmits(["update:added"]);
+// defineEmits(['drop'])
 
 
 effect(() => {
+ 
   if (parseInt(data.ingredient.quantity) > 0) {
     
-    cartStore.updateIngredient(data.ingredient)
+    cartStore.updateIngredient(data.ingredient.ingredientId,data.ingredient.quantity,props.index)
   } else {
 
-    cartStore.deleteIngredient(data.ingredient)
+    cartStore.deleteIngredient(data.ingredient,props.index)
   }
+
+  cartStore.pizzas.map(e=>{
+    if(e.id === props.pizzaid) {
+      if(e.ingredients.length > 0){
+        emit("update:added",true)
+      }else{
+        emit("update:added",false)
+      }
+    }
+  })
 
 })
 
-function moveTask($event,task){
-  
-  let obj = JSON.parse($event)
-  console.log(obj);
-  let id = obj.id
-  data.DragId = id
-  let quantit = cartStore.findIngredient(id)
-  data.ingredient = id
-  data.quantity = quantit+1
-  if(quantit === 0){
-    data.ingredient = id
-    data.quantity = 1
-    
+function shouw(id){
+  if(props.ings){
+    props.ings.map(e=>{
+    if(e.ingredientId === id){
+      console.log(e.quantity);
+      return parseInt(e.quantity)
+    }
+  })
   }else{
-    data.ingredient = id
-    data.quantity = quantit+1
-   
+    return 0
   }
-
+  
 }
 </script>
 <style lang="scss" scoped>
@@ -154,15 +173,17 @@ function moveTask($event,task){
     <p>Начинка:</p>
 
     <ul class="ingredients__list">
-      <AppDrop v-for="ingredient in ingredients" @drop="moveTask($event,task)">
+      <AppDrop v-for="ingredient in dataStore.ingredients" @drop="moveTask($event,task)">
 
         <AppDrag :transfer-data="ingredient">
           <li class="ingredients__item">
-            <span :class="'filling filling--' + ing[parseInt(ingredient.id)]" :alt="ingredient.price"
+            <span :class="'filling filling--' + ingredient.status" :alt="ingredient.price"
               :key="parseInt(ingredient.id)">{{ ingredient.name }}</span>
             <div class="counter counter--orange ingredients__counter">
               <Counter v-model:ingredientId="ingredient.id" v-model:price="ingredient.price"
-                v-model:ingredients="data.ingredient" :dragId ="props.dragId" />
+                v-model:ingredients="data.ingredient" :draged ="props.draged"  :counrval ="props.ings" :indexPizza = 'props.index'>
+                
+              </Counter>
             </div>
           </li>
         </AppDrag>

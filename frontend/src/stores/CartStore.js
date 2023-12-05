@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-
+import { ref, toRaw } from "vue";
 export const useCartStore = defineStore('cart',{
     state:()=>({
         userid:'',
@@ -10,12 +10,8 @@ export const useCartStore = defineStore('cart',{
             flat:'',
             comment:'',
         },
-        pizzas: [
-            
-          ],       
-        misc:[
-            
-        ]
+        pizzas: [],       
+        misc: []
     }),
     getters:{
         getPizzasAmount(state){
@@ -57,98 +53,149 @@ export const useCartStore = defineStore('cart',{
         AddPizza(pizza){
             this.pizzas.push(pizza)
         },
-        Addingredients(ingredient){
-            let length = this.pizzas.length
+        Addingredients(ingredient,index){           
 
-            this.pizzas[length-1].ingredients.push(ingredient)
+            this.pizzas[index].ingredients.push(ingredient)
         },
-        updateIngredient(ingredient){
+        updateIngredient(id,count,indexp){
             let length = this.pizzas.length
-            const index =  this.pizzas[length-1].ingredients.findIndex(({ ingredientId }) => ingredient.ingredientId === ingredientId)
-            
+            const index =  this.pizzas[indexp].ingredients.findIndex(({ ingredientId }) => id === ingredientId)
+            console.log(index);
             if(index!==-1){
                 
-                this.pizzas[length-1].ingredients.splice(index, 1, ingredient)            
+                this.pizzas[indexp].ingredients[index].quantity = count           
              }else {
-                this.Addingredients(ingredient)
+                this.Addingredients({ingredientId:id,quantity:count},indexp)
             }
 
             
         },
-        updateId(str,id){
+        updatedoughId(id,index){
             let length = this.pizzas.length
-            let varStr = str+'Id'
-            this.pizzas[length-1].varStr = id
+            
+            this.pizzas[index].doughId = parseInt( id)
         },
-        deleteIngredient(ingredient){
+        updatesuaceId(id,index){
+            let length = this.pizzas.length
+            
+            this.pizzas[index].sauceId = parseInt( id)
+        },
+        deleteIngredient(ingredient,indexp){
             
 
-            let length = this.pizzas.length
-            if(length>0){
-                const index =  this.pizzas[length-1].ingredients.findIndex(({ ingredientId }) => ingredient.ingredientId === ingredientId)
+            // let length = this.pizzas.[indexp]
+            if(this.pizzas[indexp]!==undefined){
+                const index =  this.pizzas[indexp].ingredients.findIndex(({ ingredientId }) => ingredient.ingredientId === ingredientId)
             
                 if(index!==-1){
                     
-                    this.pizzas[length-1].ingredients = this.pizzas[length-1].ingredients.filter(task => task.ingredientId !== ingredient.ingredientId)
+                    this.pizzas[indexp].ingredients = this.pizzas[indexp].ingredients.filter(task => task.ingredientId !== ingredient.ingredientId)
                     
                 } 
             }
             
         },
-        findIngredient(ingredientId){
+        updatesizeId(id,index){
+            let length = this.pizzas.length
+            
+            this.pizzas[index].sizeId = parseInt( id)
+        },
+        findIngredient(ingredientId,indexp){
             let length = this.pizzas.length
             if(length>0){
-                let index  = this.pizzas[length-1].ingredients.findIndex((e) => e.ingredientId === ingredientId)
+                let index  = this.pizzas[indexp].ingredients.findIndex((e) => e.ingredientId === ingredientId)
                 if (index ===-1){
                     return 0
                 }else{
-                    return this.pizzas[length-1].ingredients[index].quantity
+                    return this.pizzas[indexp].ingredients[index].quantity
                 }
                 // return  ingredient ===undefined?0:ingredient.quantity 
                          
+            }else{
+                return 0
             }
         },
-        AddPizzaName(str){
+        AddPizzaName(str,index){
             let length = this.pizzas.length
             
-            this.pizzas[length-1].name = str
+            this.pizzas[index].name = str
         },
-        updatePizzacount(num,index){
-            this.pizzas[index].quantity = num
+        updatePizzacount(num,index){         
+           
+                if(this.pizzas[index]!==undefined){
+                    if(num !== 0){
+                        this.pizzas[index].quantity = num
+                    }else{
+                        this.deletePizza(index)
+                    }
+                }
+                
+            
+           
 
+        },
+        deletePizza(index){
+            let nums =[]
+            for(let i=0;i<this.pizzas.length;i++){
+                if(i!==index){
+                    nums.push(this.pizzas[i])
+                }
+            }
+            
+            this.pizzas = nums
+        },findpizza(id){          
+                return  this.pizzas[id]         
+            
         },
         addmisc(id,count){
-            this.misc.push({miscId:id,quantity:count})
+            let misc = {miscId:id,quantity:count}
+            this.misc.push(misc)
         },updatemisc(id,count){
-
-
-            const index =  this.misc.find((e) => e.miscId === id)
-            
-
-            if(index!==undefined){
-                if(parseInt(count) === 0){
-                    this.misc = this.misc.filter(e => e.miscId != id)
+            let len = this.misc.length
+            let misc = {miscId:id,quantity:count}
+            if(len>0){
+                let index = this.misc.findIndex((e)=>e.miscId === id)
+                if(index!==-1){
+                    
+                    if(count !== 0){
+                        this.misc[index].quantity = count
+                    }else{
+                        this.delteMisc(id)
+                    }
                 }else{
-                    this.misc.splice(index,1,{miscId:id,quantity:count})
-
+                    this.addmisc(id,count)
                 }
-                       
-             }else {
+            }else{
                 this.addmisc(id,count)
             }
+            
 
            
         },delteMisc(id){
-            let length = this.pizzas.length
-            if(length>0){
-                const index =  this.misc.find((e) => e.miscId === id)
-                
-                if(index!==undefined){
-                    console.log(index);
-                    this.misc = this.misc.filter(e => e.miscId != index.miscId)
-
-                    
-                } 
+            
+            let str=ref([])
+            // console.log(str111);
+            // const pizzas=toRaw(this.misc[0])
+            // this.pizzas.filter(e=>{
+            //     return e.miscId===id
+            // })
+        
+            // const nums = toRaw(str)
+            
+            for(let i=0;i<this.misc.length;i++){
+                if(this.misc[i].miscId != id){   
+                    str.value.push(this.misc[i])
+                }
+            }
+            console.log(str);
+           this.misc = str.value
+           console.log(this.misc);
+        },findmisc(id){
+            let misc = this.misc.find(e=>e.miscId===id)
+            if(misc!==undefined){
+                return misc
+            }else{
+                return 0
             }
         }
 

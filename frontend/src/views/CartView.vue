@@ -6,12 +6,12 @@
           <h1 class="title title--big">Корзина</h1>
         </div>
 
-        <!-- <div class="sheet cart__empty">
+        <div class="sheet cart__empty" v-if="data.pizzalist.length===0">
           <p>В корзине нет ни одного товара</p>
-        </div> -->
+        </div>
 
-        <ul class="cart-list sheet">
-          <li class="cart-list__item" v-for="(item, index) in cartStore.pizzas" :key=index>
+        <ul class="cart-list sheet" v-else>
+          <li class="cart-list__item" v-for="(item, index) in data.pizzalist" :key=index>
             <div class="product cart-list__product">
               <img src="../assets/img/product.svg" class="product__img" width="56" height="56" alt="Капричоза">
               <div class="product__text">
@@ -26,22 +26,15 @@
             </div>
 
             <div class="counter cart-list__counter">
-              <Conter :page="data.page" :productId="index" :quantity="item.quantity"></Conter>
-              <!-- <button type="button" class="counter__button counter__button--minus">
-                <span class="visually-hidden">Меньше</span>
-              </button>
-              <input type="text" name="counter" class="counter__input" :value="item.quantity">
-              <button type="button" class="counter__button counter__button--plus counter__button--orange">
-                <span class="visually-hidden">Больше</span>
-              </button> -->
+              <Conter :page="data.page" :productId="index" :quantity="item.quantity" ></Conter>
             </div>
 
             <div class="cart-list__price">
-              <b>782 ₽</b>
+              <b>{{item.amount*item.quantity}}₽</b>
             </div>
 
             <div class="cart-list__button">
-              <button type="button" class="cart-list__edit" :key="index">Изменить</button>
+              <button type="button" class="cart-list__edit" @click="[router.push({ name: 'HomeView',params:{productIndex:index} })]" :key="item.id">Изменить</button>
             </div>
           </li>
           
@@ -51,20 +44,13 @@
           <ul class="additional-list">
             <li class="additional-list__item sheet" v-for="(item,index) in datastore.misc" :key="item.id">
               <p class="additional-list__description">
-                <img :src="`../assets/img/${item.image}.svg`" width="39" height="60" :alt="item.name">
+                <img :src="`/src/assets/img/${item.image}.svg`" width="39" height="60" :alt="item.name">
                 <span>{{ item.name }}</span>
               </p>
 
               <div class="additional-list__wrapper">
                 <div class="counter additional-list__counter">
                   <Conter :page="data.pageNew" :misc="item.id"></Conter>
-                  <!-- <button type="button" class="counter__button counter__button--minus">
-                    <span class="visually-hidden">Меньше</span>
-                  </button>
-                  <input type="text" name="counter" class="counter__input" value="2">
-                  <button type="button" class="counter__button counter__button--plus counter__button--orange">
-                    <span class="visually-hidden">Больше</span>
-                  </button> -->
                 </div>
 
                 <div class="additional-list__price">
@@ -72,50 +58,6 @@
                 </div>
               </div>
             </li>
-            <!-- <li class="additional-list__item sheet">
-              <p class="additional-list__description">
-                <img src="../assets/img/sauce.svg" width="39" height="60" alt="Острый соус">
-                <span>Острый соус</span>
-              </p>
-
-              <div class="additional-list__wrapper">
-                <div class="counter additional-list__counter">
-                  <button type="button" class="counter__button counter__button--minus">
-                    <span class="visually-hidden">Меньше</span>
-                  </button>
-                  <input type="text" name="counter" class="counter__input" value="2">
-                  <button type="button" class="counter__button counter__button--plus counter__button--orange">
-                    <span class="visually-hidden">Больше</span>
-                  </button>
-                </div>
-
-                <div class="additional-list__price">
-                  <b>× 30 ₽</b>
-                </div>
-              </div>
-            </li>
-            <li class="additional-list__item sheet">
-              <p class="additional-list__description">
-                <img src="../assets/img/potato.svg" width="39" height="60" alt="Картошка из печи">
-                <span>Картошка из печи</span>
-              </p>
-
-              <div class="additional-list__wrapper">
-                <div class="counter additional-list__counter">
-                  <button type="button" class="counter__button counter__button--minus">
-                    <span class="visually-hidden">Меньше</span>
-                  </button>
-                  <input type="text" name="counter" class="counter__input" value="2">
-                  <button type="button" class="counter__button counter__button--plus counter__button--orange">
-                    <span class="visually-hidden">Больше</span>
-                  </button>
-                </div>
-
-                <div class="additional-list__price">
-                  <b>× 56 ₽</b>
-                </div>
-              </div>
-            </li> -->
           </ul>
         </div>
 
@@ -125,7 +67,7 @@
             <label class="cart-form__select">
               <span class="cart-form__label">Получение заказа:</span>
 
-              <select name="test" class="select">
+              <select name="test" class="select" @change="onchang($event)">
                 <option value="1">Заберу сам</option>
                 <option value="2">Новый адрес</option>
                 <option value="3">Дом</option>
@@ -137,7 +79,7 @@
               <input type="text" name="tel" placeholder="+7 999-999-99-99">
             </label>
 
-            <div class="cart-form__address">
+            <div class="cart-form__address" v-if="data.takeType === '2'">
               <span class="cart-form__label">Новый адрес:</span>
 
               <div class="cart-form__input">
@@ -147,7 +89,7 @@
                 </label>
               </div>
 
-              <div class="cart-form__input cart-form__input--small">
+              <div class="cart-form__input cart-form__input--small" >
                 <label class="input">
                   <span>Дом*</span>
                   <input type="text" name="house">
@@ -171,7 +113,7 @@
       </div>
       <p class="footer__text">Перейти к конструктору<br>чтоб собрать ещё одну пиццу</p>
       <div class="footer__price">
-        <b>Итого: 2 228 ₽</b>
+        <b>Итого: {{gettotle(data.pizzalist,data.mice)}} ₽</b>
       </div>
 
       <div class="footer__submit">
@@ -195,18 +137,71 @@ datastore.initData();
 const data = reactive({
   Ingredients: '',
   page:"cart",
-  pageNew:'cartMisc'
+  pageNew:'cartMisc',
+  pizzalist:'',
+  mice:'',
+  totle_amount:0,
+  takeType:'1'
 })
+
+const props=defineProps({
+  Amount:{type:Number}
+})
+const emit = defineEmits(['update:Amount'])
+data.pizzalist = computed(()=>{
+  let list =[]
+
+cartStore.pizzas.map(e=>{
+  console.log(e.name);
+  console.log(e.name!='');
+  console.log(e.ingredients.length!==0);
+
+  if(e.name!=''&& e.ingredients.length!==0){
+    list.push(e)
+  }
+})
+console.log(list);
+cartStore.pizzas = list
+return list 
+})
+
+data.mice = computed(()=>{
+  
+  return cartStore.misc
+})
+
+function gettotle(pizzalist,mice){
+  let amount_pizzas = 0,amount_misc = 0
+  pizzalist.map(item=>{
+    amount_pizzas += item.quantity*item.amount
+  })
+  mice.map(item=>{
+    
+    let item_amount = 0
+    datastore.misc.map(val=>{
+      if(val.id === item.miscId){
+        item_amount = val.price
+      }
+    })
+
+    amount_misc += item.quantity*item_amount
+    
+  })
+  data.totle_amount = amount_pizzas + amount_misc
+  emit('update:Amount',data.totle_amount )
+  return data.totle_amount
+
+}
 
 
 function test(arr) {
   let result = new Array;
-  console.log(arr);
+
 
   if (arr !== undefined) {
     arr.map(element => {
       let strobj = datastore.ingredients.find(e =>e.id === element.ingredientId)
-      console.log(strobj.name);
+      
       if (strobj !== undefined) {
         result.push(strobj.name)
       }
@@ -214,6 +209,9 @@ function test(arr) {
     })
   }
   return result.join(',')
+}
+function onchang(e){
+  data.takeType = e.target.value
 }
 
 

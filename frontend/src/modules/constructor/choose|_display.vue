@@ -2,16 +2,15 @@
 import { onMounted, onUpdated, reactive, inject, computed } from 'vue';
 import sauce from '../../common/data/sauces'
 import ings from '../../common/data/ingredients'
-import {useCartStore} from '@/stores'
+import {useCartStore,useDataStore} from '@/stores'
+const dataStore = useDataStore()
 const cartStore = useCartStore()
 const pizzas = cartStore.pizzas
 
 const props = defineProps({
-    dough: {
-        type: Number
-    },
-    sauce: {
-        type: Number
+    
+    pizzaid:{
+        type:String
     }
 })
 let ingredient =[]
@@ -22,49 +21,25 @@ const state = reactive({
     count: 0
 })
 
-function update() {
-    if (parseInt(props.dough) === 2) {
-        state.name1 = "big"
-        state.count++
-    } else {
-        state.name1 = "small"
-        state.count--
-    }
-    state.name2 = sauce[props.sauce]
-}
+
 const ingredients = inject('ingredients');
 
 let show = computed(() => {
-    return function (ing) {
+    return function (pizzaid) {
         let str = ''
-        ing.map(item => {
-            if (item.count > 1) {
-
-                for (let i = 0; i < ing.count - 1; i++) {
-                    str += `<div class="pizza__filling pizza__filling--${item.name}" ></div>`
-                }
-            }
-            else {
-                str = `<div class="pizza__filling pizza__filling--${item.name}" ></div>`
-            }
+        
+        cartStore.pizzas.map(e=>{
+        if (e.id === pizzaid){
+            e.doughId ===2?state.name1 = "big":state.name1 = "small"
+            e.sauceId=== 1 ? state.name2 = "tomato":state.name2 = "creamy"
+        }
         })
-
-        return str
+        return state.name1 + '-'+state.name2
     }
 
 })
 
-// store.$subscribe((mutation, state) => {  pizzas = state.pizzas
-//   },{ detached: false })
 
-onMounted(() => {
-    update()
-})
-onUpdated(() => {
-    update()
-
-
-})
 
 
 
@@ -250,12 +225,12 @@ onUpdated(() => {
 </style>
 <template>
     <div class="content__constructor">
-        <div :class="'pizza pizza--foundation--' + state.name1 + '-' + state.name2" :key="state.count" >
+        <div :class="'pizza pizza--foundation--' + show(props.pizzaid)" :key="state.count" >
 
             <div class="pizza__wrapper" > 
                
                     
-            <div v-if="pizzas.length>0"  v-for="(item,index) in pizzas[(pizzas.length)-1].ingredients" class="pizza__filling" :class="'pizza__filling--' + ings[item.ingredientId]" :key="index"></div>
+            <div v-if="pizzas.length>0"  v-for="(item,index) in pizzas[(pizzas.length)-1].ingredients" class="pizza__filling" :class="['pizza__filling--' + ings[item.ingredientId],item.quantity===2?'pizza__filling--second':'',item.quantity === 3? 'pizza__filling--third':'']" :key="index"></div>
            
             <!-- <div class="pizza__filling pizza__filling--mushrooms" v-if="ingredients.length>0 && (ingredients[0]!=undefined && ingredients[0].count>0)" v-for="i in ingredients[0].count"></div>
             <div class="pizza__filling pizza__filling--cheddar" v-if="ingredients.length>0 && (ingredients[1]!=undefined &&  ingredients[1].count>0)" v-for="i in ingredients[1].count"></div>

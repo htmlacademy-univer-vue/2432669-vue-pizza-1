@@ -6,7 +6,7 @@
       </a>
     </div>
     <div class="header__cart">
-      <a  @click="router.push({path:'/cart'})">0 ₽</a>
+      <a  @click="router.push({path:'/cart'})">{{props.Amount}}₽</a>
     </div>
     
     <div class="header__user" v-if="props.logined">
@@ -30,7 +30,8 @@
 <script setup>
 import { useRouter } from 'vue-router';
 const props = defineProps({
-  logined:{type:Boolean}
+  logined:{type:Boolean},
+  Amount:{type:Number}
 })
 const router = useRouter()
 </script>

@@ -1,34 +1,39 @@
 <script setup>
-import sizes from '../../mocks/sizes.json'
-import s from "../../common/data/sizes"
+
 import {  reactive, onUpdated } from 'vue';
 
-import {useCartStore} from '@/stores'
+import {useCartStore,useDataStore} from '@/stores'
+const dataStore = useDataStore()
 const cartStore = useCartStore()
-
-const state = reactive({
-    id:1,
-    // sauce:"tomato",
-    multiplier:50
-    
-})
 const props = defineProps({
     size:{
         type:Object,
         
+    },
+    sizeid:{
+      type:Number
+    },index:{
+      type:Number
     }
 })
-const emit = defineEmits(['update:size'])
+const state = reactive({
+    id:props.sizeid,
+    // sauce:"tomato",
+    // multiplier:50
+    
+})
+
+const emit = defineEmits(['update:sizeid'])
 function onchange(e){
   if(e.target.checked){
-    emit('update:size',{id:e.target.title,multiplier:e.target.alt})
-    state.id=e.target.title
+        state.id=parseInt(e.target.title)  
         // state.sauce = e.target.value
-    state.multiplier = parseInt(e.target.alt) 
-  }
+        
+    }
+    emit('update:sizeid', state.id)
 }
 onUpdated(()=>{
-  cartStore.updateId("size",state.id)
+  cartStore.updatesizeId(state.id,props.index)
 })
 </script>
 <style lang="scss" scoped>
@@ -112,8 +117,8 @@ onUpdated(()=>{
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <div class="sheet__content diameter">
-                <label class="diameter__input diameter__input--small" v-for="size in sizes">
-                    <input type="radio" name="diameter" :title="size.id" class="visually-hidden" :alt="size.multiplier"  @change="onchange">
+                <label class="diameter__input diameter__input--small" v-for="size in dataStore.sizes">
+                    <input type="radio" name="diameter" :title="size.id" class="visually-hidden" :alt="size.multiplier" :checked = "size.id == state.id ? true : false"  @change="onchange">
                     <span>{{ size.name }}</span>
                 </label>
 
