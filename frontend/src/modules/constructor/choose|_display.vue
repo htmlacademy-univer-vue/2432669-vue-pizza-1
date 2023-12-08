@@ -29,26 +29,15 @@ function update() {
 }
 const ingredients = inject('ingredients');
 
-let show = computed(() => {
-    return function (ing) {
-        let str = ''
-        ing.map(item => {
-            if (item.count > 1) {
+let list = computed(()=>{
 
-                for (let i = 0; i < ing.count - 1; i++) {
-                    str += `<div class="pizza__filling pizza__filling--${item.name}" ></div>`
-                }
-            }
-            else {
-                str = `<div class="pizza__filling pizza__filling--${item.name}" ></div>`
-            }
-        })
-
-        return str
-    }
-
+    
+  return ingredients.filter(item=>{
+    return item.count >0
 })
 
+
+})
 onMounted(() => {
     update()
 })
@@ -244,30 +233,38 @@ onUpdated(() => {
     <div class="content__constructor">
         <div :class="'pizza pizza--foundation--' + state.name1 + '-' + state.name2" :key="state.count">
 
-            <div class="pizza__wrapper" >
-               
-                  
-
-
-           
-            <div class="pizza__filling pizza__filling--mushrooms" v-if="ingredients.length>0 && (ingredients[0]!=undefined && ingredients[0].count>0)" v-for="i in ingredients[0].count"></div>
-            <div class="pizza__filling pizza__filling--cheddar" v-if="ingredients.length>0 && (ingredients[1]!=undefined &&  ingredients[1].count>0)" v-for="i in ingredients[1].count"></div>
-            <div class="pizza__filling pizza__filling--salami" v-if="ingredients.length>0 && (ingredients[2]!=undefined &&  ingredients[2].count>0)" v-for="i in ingredients[2].count"></div>
-            <div class="pizza__filling pizza__filling--ham" v-if="ingredients.length>0 && (ingredients[3]!=undefined&&  ingredients[3].count>0)" v-for="i in ingredients[3].count"></div>
-            <div class="pizza__filling pizza__filling--ananas" v-if="ingredients.length>0 && (ingredients[4]!=undefined &&  ingredients[4].count>0)" v-for="i in ingredients[4].count"></div>
-            <div class="pizza__filling pizza__filling--bacon" v-if="ingredients.length>0 && (ingredients[5]!=undefined&&  ingredients[5].count>0)" v-for="i in ingredients[5].count"></div>
-            <div class="pizza__filling pizza__filling--onion" v-if="ingredients.length>0 && (ingredients[6]!=undefined &&  ingredients[6].count>0)" v-for="i in ingredients[6].count"></div>
-            <div class="pizza__filling pizza__filling--chile" v-if="ingredients.length>0 && (ingredients[7]!=undefined && ingredients[7].count>0)" v-for="i in ingredients[7].count"></div>
-            <div class="pizza__filling pizza__filling--jalapeno" v-if="ingredients.length>0 && (ingredients[8]!=undefined &&  ingredients[8].count>0)" v-for="i in ingredients[8].count"></div>
-            <div class="pizza__filling pizza__filling--olives" v-if="ingredients.length>0 && (ingredients[9]!=undefined && ingredients[9].count>0)" v-for="i in ingredients[9].count"></div>
-            <div class="pizza__filling pizza__filling--tomatoes" v-if="ingredients.length>0 && (ingredients[10]!=undefined &&  ingredients[10].count>0)" v-for="i in ingredients[10].count"></div>
-            <div class="pizza__filling pizza__filling--salmon" v-if="ingredients.length>0 && (ingredients[11]!=undefined&&  ingredients[11].count>0)" v-for="i in ingredients[11].count"></div>
-            <div class="pizza__filling pizza__filling--mozzarella" v-if="ingredients.length>0 && (ingredients[12]!=undefined &&  ingredients[12].count>0)" v-for="i in ingredients[12].count"></div>
-            <div class="pizza__filling pizza__filling--parmesan" v-if="ingredients.length>0 && (ingredients[13]!=undefined &&  ingredients[13].count>0)" v-for="i in ingredients[13].count"></div>
-            <div class="pizza__filling pizza__filling--blue_cheese" v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)" v-for="i in ingredients[14].count"></div>
+            <div class="pizza__wrapper">
+                <div  v-for="item in list" class="pizza__filling" :class ="[`pizza__filling--${item.name}` , item.count === 2 ? 'pizza__filling--second':'',item.count === 3? 'pizza__filling--third':'']" ></div>
+                <!-- <div class="pizza__filling pizza__filling--cheddar"
+                    v-if="ingredients.length > 0 && (ingredients[1] != undefined && ingredients[1].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--salami"
+                    v-if="ingredients.length > 0 && (ingredients[2] != undefined && ingredients[2].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--ham"
+                    v-if="ingredients.length > 0 && (ingredients[3] != undefined && ingredients[3].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--ananas"
+                    v-if="ingredients.length > 0 && (ingredients[4] != undefined && ingredients[4].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--bacon"
+                    v-if="ingredients.length > 0 && (ingredients[5] != undefined && ingredients[5].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--onion"
+                    v-if="ingredients.length > 0 && (ingredients[6] != undefined && ingredients[6].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--chile"
+                    v-if="ingredients.length > 0 && (ingredients[7] != undefined && ingredients[7].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--jalapeno"
+                    v-if="ingredients.length > 0 && (ingredients[8] != undefined && ingredients[8].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--olives"
+                    v-if="ingredients.length > 0 && (ingredients[9] != undefined && ingredients[9].count > 0)"></div>
+                <div class="pizza__filling pizza__filling--tomatoes"
+                    v-if="ingredients.length>0 && (ingredients[10]!=undefined &&  ingredients[10].count>0)"></div>
+                <div class="pizza__filling pizza__filling--salmon"
+                    v-if="ingredients.length>0 && (ingredients[11]!=undefined&&  ingredients[11].count>0)"></div>
+                <div class="pizza__filling pizza__filling--mozzarella"
+                v-if="ingredients.length>0 && (ingredients[12]!=undefined &&  ingredients[12].count>0)"></div>
+            <div class="pizza__filling pizza__filling--parmesan"
+                v-if="ingredients.length>0 && (ingredients[13]!=undefined &&  ingredients[13].count>0)"></div>
+            <div class="pizza__filling pizza__filling--blue_cheese"
+                v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)"></div> -->
         </div>
-                
 
-        </div>
+
     </div>
-</template>
+</div></template>

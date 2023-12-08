@@ -28,7 +28,7 @@ provide('ingredients',data.ingredients)
 
 provide('changeIn',(amount,count,id,key)=>{
   
-  if( data.ingredients[id-1] != undefined){
+  if( data.ingredients[id-1] != undefined ){
     data.ingredients[id-1].count=count
     data.ingredients[id-1].amount=amount
   }else{
@@ -56,11 +56,11 @@ let show = computed(()=>{
 function moveTask($event,task){
   let obj = JSON.parse($event)
   let id = obj.id
-  if(data.ingredients[id-1]!== undefined){
+  if(data.ingredients[id-1]!== undefined&& data.ingredients[id-1].count<3){
      data.ingredients[id-1].count = parseInt(data.ingredients[id-1].count) + 1
      data.ingredients[id-1].amount += parseInt( data.ingredients[id-1].amount)+ obj.price
     
-  }else{
+  }else if(data.ingredients[id-1]=== undefined){
     data.ingredients[id-1]= {amount:obj.price,count:1,id:id,name:obj.name}
 
   }
