@@ -1,4 +1,6 @@
+
 <template>  
+
   <div class="layout__title">
     <h1 class="title title--big">История заказов</h1>
   </div>
@@ -7,6 +9,7 @@
     <div class="order__wrapper">
       <div class="order__number">
         <b>Заказ #11199929</b>
+
       </div>
 
       <div class="order__sum">
@@ -155,6 +158,7 @@
 
     <p class="order__address">Адрес доставки: Тест (или если адрес новый - писать целиком)</p>
   </section>
+
 
 
 

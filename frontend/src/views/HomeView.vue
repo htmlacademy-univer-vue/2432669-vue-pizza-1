@@ -42,6 +42,7 @@ if(Object.keys(route.params).length!==0){
   }
   
   
+
   
 }
 
@@ -103,6 +104,7 @@ function moveTask($event, task) {
   let obj = JSON.parse($event)
 
   let id = obj.id
+
   data.draged.id = id
   data.draged.count += 1
   let quantit = cartStore.findIngredient(id,data.index)
@@ -115,6 +117,7 @@ function moveTask($event, task) {
 
     cartStore.updateIngredient(id, parseInt(quantit) + 1,data.index)
     console.log(cartStore.findIngredient(id,data.index));
+
 
   }
 

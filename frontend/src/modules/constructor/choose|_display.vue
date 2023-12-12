@@ -24,6 +24,7 @@ const state = reactive({
 
 const ingredients = inject('ingredients');
 
+
 let show = computed(() => {
     return function (pizzaid) {
         let str = ''
@@ -37,7 +38,12 @@ let show = computed(() => {
         return state.name1 + '-'+state.name2
     }
 
+
+    
+  return ingredients.filter(item=>{
+    return item.count >0
 })
+
 
 
 
@@ -247,9 +253,9 @@ let show = computed(() => {
             <div class="pizza__filling pizza__filling--mozzarella" v-if="ingredients.length>0 && (ingredients[12]!=undefined &&  ingredients[12].count>0)" v-for="i in ingredients[12].count"></div>
             <div class="pizza__filling pizza__filling--parmesan" v-if="ingredients.length>0 && (ingredients[13]!=undefined &&  ingredients[13].count>0)" v-for="i in ingredients[13].count"></div>
             <div class="pizza__filling pizza__filling--blue_cheese" v-if="ingredients.length>0 && (ingredients[14]!=undefined &&  ingredients[14].count>0)" v-for="i in ingredients[14].count"></div> -->
-        </div>
-                
 
         </div>
+
+
     </div>
-</template>
+</div></template>

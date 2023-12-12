@@ -1,4 +1,5 @@
 <template>
+
     <div class="layout__title">
       <h1 class="title title--big">Мои данные</h1>
     </div>
@@ -76,12 +77,14 @@
     <div class="layout__button">
       <button type="button" class="button button--border">Добавить новый адрес</button>
     </div>
+
 </template>
 
 <style lang="scss" scoped>
 @import "../assets/scss/app.scss";
 
 .address-form {
+
 $bl: &;
 
 position: relative;
@@ -283,6 +286,7 @@ margin-top: 20px;
 span {
   font-weight: 400;
 }
+
 }
 </style>
 
