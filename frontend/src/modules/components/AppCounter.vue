@@ -1,16 +1,20 @@
 <template>
     <CounterButton class="counter__button--minus" @click="decrement" :disabled="disabled">
     </CounterButton>
+
     <CounterValue v-model:value='count' v-model:ID="props.ingredientId" v-model:price="props.price" :statused = 'status.entered'
         v-model:drop="props.data"></CounterValue>
     <CounterButton class="counter__button--plus" :class="props.page === 'cart' || props.page === 'cartMisc'  ? 'counter__button--orange' : ''"
         @click="increment"><span class="visually-hidden">Больше</span>
+
     </CounterButton>
 </template>
 
 <script setup>
+
 import { reactive, ref, inject, onUpdated, onMounted, watchEffect, effect, computed } from "vue";
 import { useCartStore } from '@/stores'
+
 import CounterButton from './CounterButton.vue';
 import CounterValue from './CounterValue.vue';
 
@@ -22,6 +26,7 @@ const data = reactive({
 })
 
 const props = defineProps({
+
     ingredientId: { type: String },
     ingredients: { type: Array },
     price: { type: String },
@@ -34,9 +39,11 @@ const props = defineProps({
     counrval:{type: Array},
     indexPizza:{type: Number}
 
+
 })
 const emit = defineEmits(['update:ingredients'])
 const status = reactive({
+
     disabled: true,
     mines:false,
     entered:false
@@ -171,6 +178,8 @@ effect(() => {
     if(count.value !== 0){
         data.ingredientId = parseInt(props.ingredientId)
         data.quantity = count.value
+
+
 
         emit('update:ingredients', data)
         
