@@ -1,34 +1,78 @@
 <script setup>
-import { onUpdated, reactive, ref ,inject} from "vue";
-import ingredients from '../../mocks/ingredients.json'
-import ing from '../../common/data/ingredients.js'
+import { onUpdated, reactive, ref, inject, watch,effect } from "vue";
+
+
 
 import Counter from '../components/AppCounter.vue';
 import AppDrag from '@/common/components/AppDrag.vue'
 import AppDrop from '@/common/components/AppDrop.vue'
+import { useCartStore, useDataStore } from '@/stores'
 
-// const props = defineProps({
-//   datas:{type:Array}
-// })
-// const data = reactive({
-//   drop:new Array()
-// })
-
-defineEmits(['drop'])
-
-// const changeIn = inject('changeIn')
-
-// function dropTas ($event,task){
-//   let obj = JSON.parse($event)
-//   console.log($event);
-//   data.drop[obj.id] = {price:obj.price,name: obj.name}
+const dataStore = useDataStore()
+const cartStore = useCartStore()
+const data = reactive({
   
-//   console.log($event);
-// }
+  ingredient: {
+    ingredientId:0,
+    quantity:0
+  }
+
+})
+
+const props = defineProps({
+  draged:{
+        type:Object,        
+    },
+    added:{
+      type:Boolean
+    }, pizzaid:{
+        type:String
+    },
+    ings:{
+      type:Array
+    },
+    index:{type:Number}
+})
+
+const emit = defineEmits(["update:added"]);
+// defineEmits(['drop'])
 
 
-// "$emit('drop', $event)"
+effect(() => {
+ 
+  if (parseInt(data.ingredient.quantity) > 0) {
+    
+    cartStore.updateIngredient(data.ingredient.ingredientId,data.ingredient.quantity,props.index)
+  } else {
 
+    cartStore.deleteIngredient(data.ingredient,props.index)
+  }
+
+  cartStore.pizzas.map(e=>{
+    if(e.id === props.pizzaid) {
+      if(e.ingredients.length > 0){
+        emit("update:added",true)
+      }else{
+        emit("update:added",false)
+      }
+    }
+  })
+
+})
+
+function shouw(id){
+  if(props.ings){
+    props.ings.map(e=>{
+    if(e.ingredientId === id){
+      console.log(e.quantity);
+      return parseInt(e.quantity)
+    }
+  })
+  }else{
+    return 0
+  }
+  
+}
 </script>
 <style lang="scss" scoped>
 @import '../../assets/scss/ds-system/ds-colors.scss';
@@ -129,15 +173,17 @@ defineEmits(['drop'])
     <p>Начинка:</p>
 
     <ul class="ingredients__list">
-      <AppDrop v-for="ingredient in ingredients"   @drop="$emit('drop', $event)">
-      
-        <AppDrag :transfer-data="ingredient" >
-          <li class="ingredients__item" >
-            <span :class="'filling filling--' + ing[parseInt(ingredient.id)]"
-              :alt="ingredient.price" :key="parseInt(ingredient.id)">{{ ingredient.name }}</span>
-            <div class="counter counter--orange ingredients__counter">            
-              <Counter v-model:ID="ingredient.id" v-model:price="ingredient.price"
-                v-model:name="ing[parseInt(ingredient.id)]" v-model:data="data"  />
+      <AppDrop v-for="ingredient in dataStore.ingredients" @drop="moveTask($event,task)">
+
+        <AppDrag :transfer-data="ingredient">
+          <li class="ingredients__item">
+            <span :class="'filling filling--' + ingredient.status" :alt="ingredient.price"
+              :key="parseInt(ingredient.id)">{{ ingredient.name }}</span>
+            <div class="counter counter--orange ingredients__counter">
+              <Counter v-model:ingredientId="ingredient.id" v-model:price="ingredient.price"
+                v-model:ingredients="data.ingredient" :draged ="props.draged"  :counrval ="props.ings" :indexPizza = 'props.index'>
+                
+              </Counter>
             </div>
           </li>
         </AppDrag>

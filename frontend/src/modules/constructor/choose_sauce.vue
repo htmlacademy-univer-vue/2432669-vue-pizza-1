@@ -1,27 +1,32 @@
 <script setup>
-import sauces from '../../mocks/sauces.json'
-import sau from "../../common/data/sauces"
-import {  reactive } from 'vue';
 
+import {  reactive, onUpdated } from 'vue';
+
+import {useCartStore,useDataStore} from '@/stores'
+const dataStore = useDataStore()
+const cartStore = useCartStore()
+const props = defineProps({
+   
+   sauceid:{
+       type:Number,
+       required:true
+
+   }
+})
 const state = reactive({
-    sauce:"tomato",
-    price:50
+    id:props.sauceid,
+    
     
 })
-const props = defineProps({
-    sauce:{
-        type:Object,
-        required:true
-    }
-})
-const emit = defineEmits(['update:Sauce'])
+
+const emit = defineEmits(['update:sauceid'])
 function change(e){
     if(e.target.checked){
-        state.sauce = e.target.value
-        state.price = parseInt(e.target.alt) 
+        state.id=parseInt(e.target.title)      
     }
-    emit('update:Sauce',state)
+    emit('update:sauceid', state.id)
 }
+
 
 </script>
 
@@ -30,8 +35,8 @@ function change(e){
 <template>
     <div class="ingredients__sauce">
         <p>Основной соус:</p>
-        <label class="radio ingredients__input" v-for="sauce in sauces">
-            <input type="radio" name="sauce" :value="sau[parseInt(sauce.id)]" :alt="sauce.price" :checked = "sauce.id == 1 ? true : false" @change="change"> 
+        <label class="radio ingredients__input" v-for="sauce in dataStore.sauce">
+            <input type="radio" name="sauce"  :alt="sauce.price" :title="sauce.id" :checked = "sauce.id == state.id ? true : false" @change="change"> 
             <span>{{ sauce.name }}</span>
         </label>
     </div>

@@ -19,8 +19,11 @@ export default [
         name: 'CartView',
         component: () => import("../views/CartView.vue"),
         meta: { layout: 'AppLayoutMain' }
+
     },
+
     {
+
         path: '/user',
         name: 'UserView',
         component: () => import("../views/UserView.vue"),
@@ -45,12 +48,6 @@ export default [
             }
 
         ]
-    },
 
-    {
-        path: '/welcom',
-        name: 'ProfileView',
-        component: () => import("../views/ProfileView.vue"),
-        meta: { layout: 'AppLayoutDefault' }
     }
 ]

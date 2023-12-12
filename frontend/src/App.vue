@@ -4,6 +4,7 @@ import { reactive } from "vue";
 
 const state = reactive({
   logined:false,
+  totalAmount :0
 })
 
 function updateLogin  ($event
@@ -17,9 +18,11 @@ function updateLogin  ($event
   
    
     
-  <AppLayout :logined = state.logined >      
-    <router-view v-model:logined = state.logined />
-  </AppLayout>
+
+    <app-layout :logined = state.logined  :Amount="state.totalAmount">      
+    <router-view v-model:logined = state.logined v-model:Amount="state.totalAmount"/>
+  </app-layout>
+
     
   
 </template>
