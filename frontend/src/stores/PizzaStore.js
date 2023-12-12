@@ -1,14 +1,18 @@
 import { defineStore } from "pinia";
+import {useDataStore} from './DataStore'
 
 export const usePizzaStore = defineStore('pizza',{
-    state:()=>({
-        name:"",
-        sauceId:0,
-        doughId:0,
-        sizeId:0,
-        ingredients:[]
-    }),
+    state:()=>([{
+        Id:'',
+        userId:'',
+        addressId:'',
+        orderPizzas:[],
+        orderMisc:[],
+        orderAddress:{}
+
+    }]),
     getters:{
+       
 
     },
     actions:{
