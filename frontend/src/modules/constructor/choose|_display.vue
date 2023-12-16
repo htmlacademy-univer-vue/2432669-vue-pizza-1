@@ -42,6 +42,8 @@ let show = computed(() => {
     
   return ingredients.filter(item=>{
     return item.count >0
+    
+})
 })
 
 
