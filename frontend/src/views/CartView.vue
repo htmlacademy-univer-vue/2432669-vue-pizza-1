@@ -1,5 +1,7 @@
 <template>
+
   <form @submit.prevent="postdata" class="layout-form">
+
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -113,7 +115,10 @@
 
             <label class="input input--big-label">
               <span>Контактный телефон:</span>
+
               <input type="text" name="tel" placeholder="+7 999-999-99-99" @blur="changePhone($event)">
+
+
             </label>
 
             <div class="cart-form__address" v-if="data.takeType === '2'">
@@ -122,21 +127,27 @@
               <div class="cart-form__input">
                 <label class="input">
                   <span>Улица*</span>
+
                   <input type="text" name="street" @blur="changestreet($event)">
+
                 </label>
               </div>
 
               <div class="cart-form__input cart-form__input--small">
                 <label class="input">
                   <span>Дом*</span>
+
                   <input type="text" name="house" @blur="changehouse($event)">
+
                 </label>
               </div>
 
               <div class="cart-form__input cart-form__input--small">
                 <label class="input">
                   <span>Квартира</span>
+
                   <input type="text" name="apartment" @blur="changeapartment($event)">
+
                 </label>
               </div>
             </div>
@@ -154,11 +165,12 @@
       </div>
 
       <div class="footer__submit">
-        <button type="submit" class="button">Оформить заказ</button>
+        <button type="button" class="button" @click="showpopup" :disabled="data.totle_amount===0?true:false">Оформить заказ</button>
       </div>
 
     </section>
   </form>
+
   <div class="popup" v-if="data.popshow">
     <a href="#" class="close">
       <span class="visually-hidden">Закрыть попап</span>
@@ -172,12 +184,15 @@
     </div>
   </div>
 </template>
+
 <script setup>
 
 import { useRouter } from 'vue-router';
 import { useCartStore, useDataStore } from '@/stores'
 import { computed, onMounted, reactive } from 'vue';
+
 import { getToken } from '@/services/token-manager'
+
 
 import Conter from '../modules/components/AppCounter.vue'
 import { useAuthStore } from '@/stores';
@@ -190,6 +205,7 @@ const datastore = useDataStore()
 // datastore.initData();
 const data = reactive({
   Ingredients: '',
+
   page: "cart",
   pageNew: 'cartMisc',
   pizzalist: '',
@@ -207,10 +223,12 @@ const data = reactive({
 
 const props = defineProps({
   Amount: { type: Number }
+
 })
 const emit = defineEmits(['update:Amount'])
 data.pizzalist = computed(() => {
   let list = []
+
 
   cartStore.pizzas.map(e => {
     if (e.name != '' && e.ingredients.length !== 0) {
@@ -220,6 +238,7 @@ data.pizzalist = computed(() => {
 
   cartStore.pizzas = list
   return list
+
 })
 
 data.mice = computed(() => {
@@ -274,6 +293,7 @@ function onchang(e) {
   data.takeType = e.target.value
 }
 
+
 function changePhone(event) {
 
   cartStore.changPhone(event.target.value)
@@ -327,6 +347,7 @@ function getamount() {
     })
   }
 }
+
 
 function popclose() {
   const token = getToken()

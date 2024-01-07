@@ -46,7 +46,9 @@
 
     text-align: center;
   }
+
   animation: bounce .5s;
+
 }
 
 .popup__title {
@@ -61,6 +63,7 @@
   }
 }
 
+
 @keyframes bounce {
   0% {
     transform: scale(0);
@@ -74,4 +77,5 @@
     transform: scale(1);
   }
 }
+
 

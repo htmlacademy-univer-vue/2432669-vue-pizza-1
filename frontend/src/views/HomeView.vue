@@ -36,12 +36,15 @@ const data = reactive({
   index:cartStore.pizzas.length
 })
 if(Object.keys(route.params).length!==0){
-  pizza =   cartStore.pizzas[route.params.productIndex]
+  if(route.params.productIndex){
+    pizza =   cartStore.pizzas[route.params.productIndex]
   data.index = route.params.productIndex
+
 
   if(route.params.reload){
     location.reload()
   }
+
   
 
   
