@@ -1,12 +1,14 @@
 <template>
-  <form action="test.html" method="post" class="layout-form">
+  <form @submit.prevent="postdata" class="layout-form">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
           <h1 class="title title--big">Корзина</h1>
+          <span>{{
+            getamount() }}</span>
         </div>
 
-        <div class="sheet cart__empty" v-if="data.pizzalist.length===0">
+        <div class="sheet cart__empty" v-if="data.pizzalist.length === 0">
           <p>В корзине нет ни одного товара</p>
         </div>
 
@@ -19,38 +21,73 @@
                 <ul>
                   <li>{{ datastore.sizes.find(element => element.id === item.sizeId).name + ", на тонком тесте" }}</li>
                   <li>Соус: {{ datastore.sauce.find(element => element.id === item.sauceId).name }}</li>
-                  <li>Начинка:{{ test(item.ingredients)}}</li>
+                  <li>Начинка:{{ test(item.ingredients) }}</li>
                   <!-- IngredientsData -->
                 </ul>
               </div>
             </div>
 
             <div class="counter cart-list__counter">
-              <Conter :page="data.page" :productId="index" :quantity="item.quantity" ></Conter>
+              <Conter :page="data.page" :productId="index" :quantity="item.quantity"></Conter>
             </div>
 
             <div class="cart-list__price">
-              <b>{{item.amount*item.quantity}}₽</b>
+              <b>{{ item.amount * item.quantity }}₽</b>
             </div>
 
             <div class="cart-list__button">
-              <button type="button" class="cart-list__edit" @click="[router.push({ name: 'HomeView',params:{productIndex:index} })]" :key="item.id">Изменить</button>
+              <button type="button" class="cart-list__edit"
+                @click="[router.push({ name: 'HomeView', params: { productIndex: index } })]" :key="item.id">Изменить</button>
             </div>
           </li>
-          
-        </ul>
 
-        <div class="cart__additional">
+        </ul>
+        <div class="cart__additional" v-if="cartStore.misc.length !==0 ">
           <ul class="additional-list">
-            <li class="additional-list__item sheet" v-for="(item,index) in datastore.misc" :key="item.id">
+            <li class="additional-list__item sheet" v-for="(item, index) in datastore.misc" >
               <p class="additional-list__description">
-                <img :src="`/src/assets/img/${item.image}.svg`" width="39" height="60" :alt="item.name">
+                <img :src="`${getPublicImage(item.image)}`" width="39" height="60" :alt="item.name">
+                <span>{{ item.name }}</span>
+              </p>
+              <div v-for="items in data.mice" :key="item.id">
+                <div class="additional-list__wrapper" v-if="items.miscId === item.id" >
+                <div class="counter additional-list__counter" >
+                  <Conter :page="data.pageNew" :misc="item.id" :quantity="items.quantity"></Conter>
+
+                </div>
+                <!-- <div v-else style="display: none;">
+                </div> -->
+                <div class="additional-list__price" >
+                  <b>× {{ item.price }} ₽</b>
+                </div>
+                <!-- <div v-else style="display: none;border-top:0">
+                </div> -->
+              </div>
+              </div>
+              
+              <!-- <div class="additional-list__wrapper" >
+                <div class="counter additional-list__counter" >
+                  <Conter :page="data.pageNew" :misc="item.id" :quantity="0"></Conter>
+                </div>
+
+                <div class="additional-list__price">
+                  <b>× {{ item.price }} ₽</b>
+                </div>
+              </div> -->
+            </li>
+          </ul>
+        </div>
+        <div class="cart__additional" v-else>
+          <ul class="additional-list">
+            <li class="additional-list__item sheet" v-for="(item, index) in datastore.misc" :key="item.id">
+              <p class="additional-list__description">
+                <img :src="`${getPublicImage(item.image)}`" width="39" height="60" :alt="item.name">
                 <span>{{ item.name }}</span>
               </p>
 
               <div class="additional-list__wrapper">
                 <div class="counter additional-list__counter">
-                  <Conter :page="data.pageNew" :misc="item.id"></Conter>
+                  <Conter :page="data.pageNew" :misc="item.id" :quantity="0"></Conter>
                 </div>
 
                 <div class="additional-list__price">
@@ -70,13 +107,13 @@
               <select name="test" class="select" @change="onchang($event)">
                 <option value="1">Заберу сам</option>
                 <option value="2">Новый адрес</option>
-                <option value="3">Дом</option>
+                <option value="3" v-if="authStore.user">Дом</option>
               </select>
             </label>
 
             <label class="input input--big-label">
               <span>Контактный телефон:</span>
-              <input type="text" name="tel" placeholder="+7 999-999-99-99">
+              <input type="text" name="tel" placeholder="+7 999-999-99-99" @blur="changePhone($event)">
             </label>
 
             <div class="cart-form__address" v-if="data.takeType === '2'">
@@ -85,21 +122,21 @@
               <div class="cart-form__input">
                 <label class="input">
                   <span>Улица*</span>
-                  <input type="text" name="street">
+                  <input type="text" name="street" @blur="changestreet($event)">
                 </label>
               </div>
 
-              <div class="cart-form__input cart-form__input--small" >
+              <div class="cart-form__input cart-form__input--small">
                 <label class="input">
                   <span>Дом*</span>
-                  <input type="text" name="house">
+                  <input type="text" name="house" @blur="changehouse($event)">
                 </label>
               </div>
 
               <div class="cart-form__input cart-form__input--small">
                 <label class="input">
                   <span>Квартира</span>
-                  <input type="text" name="apartment">
+                  <input type="text" name="apartment" @blur="changeapartment($event)">
                 </label>
               </div>
             </div>
@@ -109,86 +146,109 @@
     </main>
     <section class="footer">
       <div class="footer__more">
-        <a href="#" class="button button--border button--arrow" @click="router.push({path:'/'})">Хочу еще одну</a>
+        <a href="#" class="button button--border button--arrow" @click="router.push({ path: '/' })">Хочу еще одну</a>
       </div>
       <p class="footer__text">Перейти к конструктору<br>чтоб собрать ещё одну пиццу</p>
       <div class="footer__price">
-        <b>Итого: {{gettotle(data.pizzalist,data.mice)}} ₽</b>
+        <b>Итого: {{ gettotle(data.pizzalist, data.mice) }} ₽</b>
       </div>
 
       <div class="footer__submit">
         <button type="submit" class="button">Оформить заказ</button>
       </div>
+
     </section>
   </form>
+  <div class="popup" v-if="data.popshow">
+    <a href="#" class="close">
+      <span class="visually-hidden">Закрыть попап</span>
+    </a>
+    <div class="popup__title">
+      <h2 class="title">Спасибо за заказ</h2>
+    </div>
+    <p>Мы начали готовить Ваш заказ, скоро привезём его вам ;)</p>
+    <div class="popup__button">
+      <a href="#" class="button" @click="popclose">Отлично, я жду!</a>
+    </div>
+  </div>
 </template>
 <script setup>
 
 import { useRouter } from 'vue-router';
 import { useCartStore, useDataStore } from '@/stores'
 import { computed, onMounted, reactive } from 'vue';
-import Conter from '../modules/components/AppCounter.vue'
+import { getToken } from '@/services/token-manager'
 
+import Conter from '../modules/components/AppCounter.vue'
+import { useAuthStore } from '@/stores';
+import { getPublicImage } from '@/common/helper'
+const authStore = useAuthStore()
 
 const router = useRouter()
 const cartStore = useCartStore()
 const datastore = useDataStore()
-datastore.initData();
+// datastore.initData();
 const data = reactive({
   Ingredients: '',
-  page:"cart",
-  pageNew:'cartMisc',
-  pizzalist:'',
-  mice:'',
-  totle_amount:0,
-  takeType:'1'
+  page: "cart",
+  pageNew: 'cartMisc',
+  pizzalist: '',
+  mice: '',
+  totle_amount: 0,
+  takeType: '1',
+  address: {
+    street: '',
+    building: '',
+    flat: '',
+    comment: ''
+  },
+  popshow: false
 })
 
-const props=defineProps({
-  Amount:{type:Number}
+const props = defineProps({
+  Amount: { type: Number }
 })
 const emit = defineEmits(['update:Amount'])
-data.pizzalist = computed(()=>{
-  let list =[]
+data.pizzalist = computed(() => {
+  let list = []
 
-cartStore.pizzas.map(e=>{
-  console.log(e.name);
-  console.log(e.name!='');
-  console.log(e.ingredients.length!==0);
+  cartStore.pizzas.map(e => {
+    if (e.name != '' && e.ingredients.length !== 0) {
+      list.push(e)
+    }
+  })
 
-  if(e.name!=''&& e.ingredients.length!==0){
-    list.push(e)
-  }
-})
-console.log(list);
-cartStore.pizzas = list
-return list 
+  cartStore.pizzas = list
+  return list
 })
 
-data.mice = computed(()=>{
-  
+data.mice = computed(() => {
+
   return cartStore.misc
 })
 
-function gettotle(pizzalist,mice){
-  let amount_pizzas = 0,amount_misc = 0
-  pizzalist.map(item=>{
-    amount_pizzas += item.quantity*item.amount
+function gettotle(pizzalist, mice) {
+  let amount_pizzas = 0, amount_misc = 0
+  pizzalist.map(item => {
+    amount_pizzas += item.quantity * item.amount
   })
-  mice.map(item=>{
-    
-    let item_amount = 0
-    datastore.misc.map(val=>{
-      if(val.id === item.miscId){
-        item_amount = val.price
-      }
-    })
+  if (mice) {
+    mice.map(item => {
 
-    amount_misc += item.quantity*item_amount
-    
-  })
+      let item_amount = 0
+      datastore.misc.map(val => {
+        if (val.id === item.miscId) {
+          item_amount = val.price
+        }
+      })
+
+      amount_misc += item.quantity * item_amount
+
+    })
+  }
+
   data.totle_amount = amount_pizzas + amount_misc
-  emit('update:Amount',data.totle_amount )
+  emit('update:Amount', data.totle_amount)
   return data.totle_amount
 
 }
@@ -200,8 +260,8 @@ function test(arr) {
 
   if (arr !== undefined) {
     arr.map(element => {
-      let strobj = datastore.ingredients.find(e =>e.id === element.ingredientId)
-      
+      let strobj = datastore.ingredients.find(e => e.id === element.ingredientId)
+
       if (strobj !== undefined) {
         result.push(strobj.name)
       }
@@ -210,11 +270,80 @@ function test(arr) {
   }
   return result.join(',')
 }
-function onchang(e){
+function onchang(e) {
   data.takeType = e.target.value
 }
 
+function changePhone(event) {
 
+  cartStore.changPhone(event.target.value)
+}
+
+function changestreet(event) {
+
+  data.address.street = event.target.value
+}
+function changehouse(event) {
+  data.address.building = event.target.value
+}
+function changeapartment(event) {
+  data.address.flat = event.target.value
+}
+
+function postdata() {
+  if (data.takeType === '2') {
+    cartStore.changaddress(data.address)
+  }
+
+  try {
+    const resp = cartStore.postorder()
+    // console.log(JSON.stringify(resp) );
+    data.popshow = true
+
+  } catch (e) {
+    throw e
+  }
+
+}
+
+function getamount() {
+  let addition = 0, size = 1, amount = 0
+  if (cartStore.pizzas) {
+    cartStore.pizzas.map(item => {
+
+      item.ingredients.map(it => {
+        datastore.ingredients.map(i => {
+          if (i.id === it.ingredientId) {
+            addition += Number(i.price)
+          }
+
+        })
+      })
+      console.log(addition);
+
+      size = datastore.sizes[item.sizeId - 1].multiplier
+      amount = (50 + 300 + addition) * Number(size)
+      item.amount = amount
+    })
+  }
+}
+
+function popclose() {
+  const token = getToken()
+  if (token) {
+    cartStore.initdata()
+    router.push({ path: '/user/orders', query: { reload: true }  })
+    // router.push({ name: 'HomeView', params: { reload: true } })
+
+  } else {
+
+
+    router.push({ name: 'HomeView', params: { reload: true } })
+
+   
+
+  }
+}
 
 
 

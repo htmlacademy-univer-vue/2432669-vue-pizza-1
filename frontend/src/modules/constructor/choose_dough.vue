@@ -6,7 +6,7 @@ import { onMounted, onUpdated, reactive } from 'vue';
 
 import {useDataStore} from '@/stores'
 const dataStore = useDataStore()
-dataStore.initData()
+
 const props = defineProps({
   doughid:{type:Number}
 })
