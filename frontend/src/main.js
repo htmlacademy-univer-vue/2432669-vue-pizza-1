@@ -4,7 +4,7 @@ import { getToken } from '@/services/token-manager'
 import {  useAuthStore } from '@/stores'
 import App from "./App.vue";
 import router from "./router";
-
+import 'animate.css'
 const app = createApp(App);
 
 app.use(createPinia());
