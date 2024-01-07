@@ -3,7 +3,7 @@ import { AppLayout } from '@/layouts'
 import { reactive } from "vue";
 
 const state = reactive({
-  logined:false,
+  
   totalAmount :0
 })
 
@@ -19,8 +19,11 @@ function updateLogin  ($event
    
     
 
-    <app-layout :logined = state.logined  :Amount="state.totalAmount">      
-    <router-view v-model:logined = state.logined v-model:Amount="state.totalAmount"/>
+    <app-layout  :Amount="state.totalAmount">   
+      <transition enter-active-class="animate__animated animate__bounceInRight" leave-active-class="animate__animated animate__bounceOutLeft">
+        <router-view  v-model:Amount="state.totalAmount"/>
+
+      </transition>  
   </app-layout>
 
     

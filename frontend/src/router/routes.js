@@ -1,6 +1,6 @@
 import Orders from "../views/OrdersView.vue";
 import Profile from "../views/ProfileView.vue";
-
+import { isAdmin } from '@/middlewares'
 export default [
     {
         path: '/',
@@ -28,21 +28,25 @@ export default [
         name: 'UserView',
         component: () => import("../views/UserView.vue"),
         redirect: "/user/profile",
-        meta: { layout: 'AppLayoutMain' },
+        meta: { layout: 'AppLayoutMain' ,
+        middlewares: [isAdmin]},
 
         children: [
             {
                 path: 'orders',
                 // name: 'OrdersView',
                 component: Orders,
-                meta: { layout: 'AppLayoutMain' }
+                meta: { layout: 'AppLayoutMain' ,
+                middlewares: [isAdmin]
+            }
 
             },
             {
                 path: 'profile',
                 // name: 'ProfileView',
                 component: Profile,
-                meta: { layout: 'AppLayoutMain' }
+                meta: { layout: 'AppLayoutMain' ,
+                middlewares: [isAdmin]}
 
                 // meta: { layout: 'AppLayoutDefault' }
             }
