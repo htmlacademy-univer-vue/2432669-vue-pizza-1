@@ -1,12 +1,13 @@
 import { HttpClient } from './HttpClient'
 import { getToken } from './token-manager'
 import httpProvider from '@/services/providers'
-const BASE_URL = '/api/size'
+const BASE_URL = 'http://localhost:3000'
+
 
 class SizeService extends HttpClient {
-	async fetchIngredient() {
+	async fetchsize() {
 		try {
-			return this.get('/')
+			return this.get('/sizes')
 		} catch (e) {
 			throw Error(e)
 		}

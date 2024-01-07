@@ -50,7 +50,7 @@ const status = reactive({
 })
 const ingredient = inject('ingredients')
 
-let count =  props.page === "cart"? ref(props.quantity) : ref(0)
+let count =  props.page === "cart" ||props.page === "cartMisc" ? ref(props.quantity) : ref(0)
 
 
 

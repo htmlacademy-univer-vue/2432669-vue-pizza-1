@@ -2,12 +2,13 @@ import { HttpClient } from './HttpClient'
 import { getToken } from './token-manager'
 import httpProvider from '@/services/providers'
 
-const BASE_URL = '/api/otherProducts'
+const BASE_URL = 'http://localhost:3000'
+
 
 class OtherProductsService extends HttpClient {
 	async fetchOtherProducts() {
 		try {
-			return this.get('/')
+			return this.get('/misc')
 		} catch (e) {
 			throw Error(e)
 		}
