@@ -44,7 +44,7 @@
           </li>
 
         </ul>
-        <div class="cart__additional" v-if="cartStore.misc.length !==0 ">
+        <div class="cart__additional" v-if="onemoretips ">
           <ul class="additional-list">
             <li class="additional-list__item sheet" v-for="(item, index) in datastore.misc" >
               <p class="additional-list__description">
@@ -186,7 +186,7 @@
 
 <script setup>
 
-import { useRouter } from 'vue-router';
+import { useRouter ,useRoute} from 'vue-router';
 import { useCartStore, useDataStore } from '@/stores'
 import { computed, onMounted, reactive } from 'vue';
 
@@ -197,7 +197,7 @@ import Conter from '../modules/components/AppCounter.vue'
 import { useAuthStore } from '@/stores';
 import { getPublicImage } from '@/common/helper'
 const authStore = useAuthStore()
-
+const route=useRoute()
 const router = useRouter()
 const cartStore = useCartStore()
 const datastore = useDataStore()
@@ -217,13 +217,25 @@ const data = reactive({
     flat: '',
     comment: ''
   },
-  popshow: false
+  popshow: false,
+  onemoretips:false
 })
 
 const props = defineProps({
   Amount: { type: Number }
 
 })
+
+if(Object.keys(route.query).length!==0){
+
+
+  if(route.query.misc){
+    onemoretips = route.query.misc
+  }
+  
+
+  
+}
 const emit = defineEmits(['update:Amount'])
 data.pizzalist = computed(() => {
   let list = []
