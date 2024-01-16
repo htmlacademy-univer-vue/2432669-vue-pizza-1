@@ -1,15 +1,13 @@
 import { defineStore } from "pinia";
 import { ref, toRaw } from "vue";
+import {tipsService}from '../services'
+
+import {  useAuthStore } from '@/stores';
 export const useCartStore = defineStore('cart',{
     state:()=>({
         userid:'',
         phone:'',
-        address:{
-            street:'',
-            building:'',
-            flat:'',
-            comment:'',
-        },
+        address:'',
         pizzas: [],       
         misc: []
     }),
@@ -197,6 +195,70 @@ export const useCartStore = defineStore('cart',{
             }else{
                 return 0
             }
+        },
+        changPhone(phone){
+            this.phone = phone
+        },
+        changaddress(address){
+            this.address = address
+        },
+        initdata()
+{
+this.userid='',
+this.phone='',
+this.address='',
+this.pizzas = [],this.misc=[]
+}        ,
+        async postorder(){
+            const authStore = useAuthStore()
+            if(authStore.user){
+                this.userid = authStore.user.id;
+                
+            }else{
+                this.userid=null
+            }
+            
+            let pizzases = this.pizzas
+            pizzases.map(item=>{delete item.amount
+            if(item.id){
+                delete item.id
+            }
+            
+            item.ingredients.map(item=>{
+                if(item.id){
+                delete item.id
+
+                }
+            })
+            })
+            if(this.misc){
+                this.misc.map(item=>{
+                if(item.id){
+                    delete item.id
+                }
+            })
+            }
+            
+            let data = {}
+            if(this.address!==undefined){
+                data = {
+                    userId:this.userid,
+                    phone:this.phone,
+                    address:this.address,
+                    pizzas: pizzases,       
+                    misc: this.misc
+                }
+            }else{
+                data = {
+                    userId:this.userid,
+                    phone:this.phone,                    
+                    pizzas: pizzases,       
+                    misc: this.misc
+                } 
+            }
+            const res = await tipsService.postorders(data)
+            console.log(res);
+            return res
         }
 
     }

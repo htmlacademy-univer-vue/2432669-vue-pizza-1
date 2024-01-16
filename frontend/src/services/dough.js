@@ -3,11 +3,10 @@ import { getToken } from './token-manager'
 import httpProvider from '@/services/providers'
 const BASE_URL = 'http://localhost:3000'
 
-
-class SauceService extends HttpClient {
-	async fetchsauces() {
+class doughService extends HttpClient {
+	async fetchdough() {
 		try {
-			return this.get('/sauces')
+			return this.get('/dough')
 		} catch (e) {
 			throw Error(e)
 		}
@@ -15,7 +14,7 @@ class SauceService extends HttpClient {
 	
 }
 
-export default new SauceService({
+export default new doughService({
 	httpProvider,
 	baseURL: BASE_URL,
 	getToken,

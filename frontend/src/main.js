@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { getToken, removeToken } from '@/services/token-manager'
+import { getToken } from '@/services/token-manager'
+import {  useAuthStore } from '@/stores'
 import App from "./App.vue";
 import router from "./router";
 
@@ -12,12 +13,12 @@ app.use(router);
 app.mount("#app");
 const token = getToken()
 if (token) {
-	try {
+	// try {
 		const authStore = useAuthStore()
 		await authStore.getMe()
 		await router.push('/')
-	} catch (e) {
-		removeToken()
-		console.log(e)
-	}
+	// } catch (e) {
+	// 	// removeToken()
+	// 	console.log(e)
+	// }
 }

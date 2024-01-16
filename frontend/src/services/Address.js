@@ -2,33 +2,33 @@ import { HttpClient } from './HttpClient'
 import { getToken } from './token-manager'
 import httpProvider from '@/services/providers'
 
-const BASE_URL = '/api/address'
+const BASE_URL = 'http://localhost:3000'
 
 class AddressService extends HttpClient {
 	async fetchAddress() {
 		try {
-			return this.get('/')
+			return this.get('/addresses')
 		} catch (e) {
 			throw Error(e)
 		}
 	}
-	async createAddress(comment) {
+	async createAddress(address) {
 		try {
-			return this.post('/', { data: comment})
+			return this.post('/addresses', { data:address})
 		} catch (e) {
 			throw Error(e)
 		}
 	}
     async updateAddress(address) {
 		try {
-			return this.put(`/${address.id}`, { address: address})
+			return this.put(`/addresses/${address.id}`, { data:address})
 		} catch (e) {
 			throw Error(e)
 		}
 	}
 	async deleteAddress(id) {
 		try {
-			await this.delete(`/${id}`)
+			await this.delete(`/addresses/${id}`)
 		} catch (e) {
 			throw Error(e)
 		}

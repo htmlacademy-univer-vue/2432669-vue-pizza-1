@@ -13,10 +13,12 @@ const router = useRouter()
 const route=useRoute()
 const datastroe = useDataStore()
 const cartStore = useCartStore()
-datastroe.initData()
-
+// console.log(datastroe.sizes.length);
+if(datastroe.sizes.length === 0){
+  datastroe.initData()
+}
 let pizza = reactive( {
-    id: new Date(),
+    // id: new Date(),
     name: '',
     sauceId: 1,
     doughId: 1,
@@ -34,13 +36,12 @@ const data = reactive({
   index:cartStore.pizzas.length
 })
 if(Object.keys(route.params).length!==0){
-  if(route.params.productIndex){
-    pizza =   cartStore.pizzas[route.params.productIndex]
+  pizza =   cartStore.pizzas[route.params.productIndex]
   data.index = route.params.productIndex
-  }else if(route.params.reload){
-    router.go()
+
+  if(route.params.reload){
+    location.reload()
   }
-  
   
 
   
@@ -52,20 +53,20 @@ if(Object.keys(route.params).length!==0){
 let show = computed(() => {
   return function (cartStore,datastroe,data) {
     
-    const pizzas_pro = cartStore.pizzas.filter(item => {return item.id === data.pizzaid})
-    const pizzas=toRaw(pizzas_pro[0])
-    if(pizzas!==undefined){
-      data.open = (data.added && pizzas.name !=='')?false :true
-      console.log(pizza.name);
+    // const pizzas_pro = cartStore.pizzas.filter(item => {return item.id === data.pizzaid})
+    // const pizzas=toRaw(pizzas_pro[0])
+    if(this.pizza!==undefined){
+      data.open = (data.added && this.pizza.name !=='')?false :true
+      // console.log(pizza.name);
       
     const doughPriceList = datastroe.dough.map(item => {
-            if (item.id === pizzas.doughId) {
+            if (item.id === this.pizza.doughId) {
         return parseInt(item.price) 
       }
     })
     const doughPrice = doughPriceList.filter(e=>e!==undefined)
     const saucePriceList = datastroe.sauce.map(item => {
-      if (item.id === pizzas.sauceId) {
+      if (item.id === this.pizza.sauceId) {
         return parseInt(item.price)       
       }
     })
@@ -74,7 +75,7 @@ let show = computed(() => {
     
 
     const sizeList = datastroe.sizes.map(item => {
-      if (item.id === pizzas.sizeId) {
+      if (item.id === this.pizza.sizeId) {
         
         return parseInt(item.multiplier)
       }
@@ -83,11 +84,12 @@ let show = computed(() => {
    
 
     let all = 0
-    if(pizzas.ingredients){
-      pizzas.ingredients.map(item => {
+
+    if(this.pizza.ingredients){
+      this.pizza.ingredients.map(item => {
         datastroe.ingredients.map(val => {
           if (item.ingredientId === val.id) {
-            all += val.price
+            all += val.price * item.quantity
           }
         })
       })
@@ -128,7 +130,8 @@ function onchange(e) {
   cartStore.AddPizzaName(e.target.value,data.index)
 }
 function check(){
-  const pizzas_pro = cartStore.pizzas.filter(item => {return item.id === data.pizzaid})
+  // const pizzas_pro = cartStore.pizzas.filter(item => {return item.id === data.pizzaid})
+  const pizzas_pro = this.pizza
     const pizzas=toRaw(pizzas_pro[0])
     
     if(pizzas){
@@ -140,6 +143,7 @@ function check(){
 
 effect(()=>{
   check
+  
 })
 onMounted(() => {
   data.pizzaid = pizza.id
@@ -147,7 +151,7 @@ onMounted(() => {
  if(Object.keys(route.params).length===0){  
   cartStore.AddPizza(pizza)
 }
- 
+// datastroe.initData()
 })
 
 </script>

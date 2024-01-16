@@ -12,8 +12,8 @@
     <div class="header__user"  v-if="authStore.user">
       <a @click="router.push({path:'/user'})">
         <picture>
-          <source type="image/webp" srcset="../assets/img/users/user5.webp 1x, ../assets/img/users/user5@2x.webp 2x">
-          <img :src="userImage" srcset=".userImage" :alt="authStore.user.name " width="32" height="32">
+          <!-- <source type="image/webp" srcset="../assets/img/users/user5.webp 1x, ../assets/img/users/user5@2x.webp 2x"> -->
+          <img :src="userImage"  :alt="authStore.user.name " width="32" height="32">
         </picture>
         <span>{{ authStore.user.name }}</span>
       </a>
