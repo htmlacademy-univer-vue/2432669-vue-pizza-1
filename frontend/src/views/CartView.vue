@@ -44,7 +44,9 @@
           </li>
 
         </ul>
-        <div class="cart__additional" v-if="onemoretips ">
+
+        <div class="cart__additional" v-if="cartStore.misc.length !==0 ">
+
           <ul class="additional-list">
             <li class="additional-list__item sheet" v-for="(item, index) in datastore.misc" >
               <p class="additional-list__description">
@@ -55,6 +57,7 @@
                 <div class="additional-list__wrapper" v-if="items.miscId === item.id" >
                 <div class="counter additional-list__counter" >
                   <Conter :page="data.pageNew" :misc="item.id" :quantity="items.quantity"></Conter>
+
 
                 </div>
                 <!-- <div v-else style="display: none;">
@@ -71,6 +74,7 @@
                 <div class="counter additional-list__counter" >
                   <Conter :page="data.pageNew" :misc="item.id" :quantity="0"></Conter>
                 </div>
+
 
                 <div class="additional-list__price">
                   <b>× {{ item.price }} ₽</b>
@@ -117,6 +121,9 @@
               <span>Контактный телефон:</span>
 
               <input type="text" name="tel" placeholder="+7 999-999-99-99" @blur="changePhone($event)">
+
+
+
 
             </label>
 
@@ -193,6 +200,14 @@ import { computed, onMounted, reactive } from 'vue';
 import { getToken } from '@/services/token-manager'
 
 
+
+import Conter from '../modules/components/AppCounter.vue'
+import { useAuthStore } from '@/stores';
+import { getPublicImage } from '@/common/helper'
+const authStore = useAuthStore()
+
+
+
 import Conter from '../modules/components/AppCounter.vue'
 import { useAuthStore } from '@/stores';
 import { getPublicImage } from '@/common/helper'
@@ -217,8 +232,9 @@ const data = reactive({
     flat: '',
     comment: ''
   },
-  popshow: false,
-  onemoretips:false
+
+  popshow: false
+
 })
 
 const props = defineProps({
@@ -226,19 +242,10 @@ const props = defineProps({
 
 })
 
-if(Object.keys(route.query).length!==0){
-
-
-  if(route.query.misc){
-    onemoretips = route.query.misc
-  }
-  
-
-  
-}
 const emit = defineEmits(['update:Amount'])
 data.pizzalist = computed(() => {
   let list = []
+
 
 
   cartStore.pizzas.map(e => {
@@ -313,6 +320,7 @@ function changePhone(event) {
 function changestreet(event) {
 
   data.address.street = event.target.value
+
 }
 function changehouse(event) {
   data.address.building = event.target.value
@@ -320,6 +328,7 @@ function changehouse(event) {
 function changeapartment(event) {
   data.address.flat = event.target.value
 }
+
 
 function postdata() {
   if (data.takeType === '2') {

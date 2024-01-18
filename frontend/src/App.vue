@@ -19,8 +19,14 @@ function updateLogin  ($event
    
     
 
-    <app-layout  :Amount="state.totalAmount">      
-    <router-view  v-model:Amount="state.totalAmount"/>
+
+    <app-layout  :Amount="state.totalAmount">   
+      <transition enter-active-class="animate__animated animate__bounceInRight" leave-active-class="animate__animated animate__bounceOutLeft">
+        <router-view  v-model:Amount="state.totalAmount"/>
+
+      </transition>  
+
+   
   </app-layout>
 
     

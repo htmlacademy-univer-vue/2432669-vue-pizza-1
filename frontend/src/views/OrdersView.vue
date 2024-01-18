@@ -22,7 +22,9 @@
         <button type="button" class="button button--border" :id="order.id" @click="deleteOrder($event)">Удалить</button>
       </div>
       <div class="order__button">
-        <button type="button" class="button" @click="[onemoretime(order.id),router.push({path:'/cart',query:{misc:true}})]" >Повторить</button>
+
+        <button type="button" class="button" @click="[onemoretime(order.id),router.push('/cart')]" >Повторить</button>
+
       </div>
     </div>
 
