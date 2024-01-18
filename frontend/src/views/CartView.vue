@@ -122,6 +122,9 @@
 
               <input type="text" name="tel" placeholder="+7 999-999-99-99" @blur="changePhone($event)">
 
+
+
+
             </label>
 
             <div class="cart-form__address" v-if="data.takeType === '2'">
@@ -318,6 +321,7 @@ function changePhone(event) {
 function changestreet(event) {
 
   data.address.street = event.target.value
+
 }
 function changehouse(event) {
   data.address.building = event.target.value
