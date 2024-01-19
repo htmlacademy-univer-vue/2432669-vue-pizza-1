@@ -312,6 +312,7 @@ function onchang(e) {
 }
 
 
+
 function changePhone(event) {
 
   cartStore.changPhone(event.target.value)
@@ -324,6 +325,7 @@ function changestreet(event) {
 }
 function changehouse(event) {
   data.address.building = event.target.value
+
 }
 function changeapartment(event) {
   data.address.flat = event.target.value
@@ -333,6 +335,7 @@ function changeapartment(event) {
 function postdata() {
   if (data.takeType === '2') {
     cartStore.changaddress(data.address)
+
   }
 
   try {
@@ -366,7 +369,19 @@ function getamount() {
       item.amount = amount
     })
   }
+
 }
+
+function getamount() {
+  let addition = 0, size = 1, amount = 0
+  if (cartStore.pizzas) {
+    cartStore.pizzas.map(item => {
+
+      item.ingredients.map(it => {
+        datastore.ingredients.map(i => {
+          if (i.id === it.ingredientId) {
+            addition += Number(i.price)
+          }
 
 
 function popclose() {
@@ -377,6 +392,7 @@ function popclose() {
     // router.push({ name: 'HomeView', params: { reload: true } })
 
   } else {
+
 
 
     router.push({ name: 'HomeView', params: { reload: true } })

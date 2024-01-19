@@ -26,8 +26,7 @@ function updateLogin  ($event
 
       </transition>  
 
-   
-  </app-layout>
+
 
     
   

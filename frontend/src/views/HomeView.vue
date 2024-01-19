@@ -46,7 +46,6 @@ if(Object.keys(route.params).length!==0){
   }
 
 
-  
 
   
 }
